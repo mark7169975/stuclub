@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 
-    <title>发件箱</title>
+    <title>回收站</title>
 
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
@@ -39,7 +39,8 @@
 
 </head>
 
-<body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="associationController">
+<body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="associationController"
+      ng-init="findAllType()">
 
 <!-- 内容区域 -->
 <!-- @@master = admin-layout.html-->
@@ -51,7 +52,7 @@
 <!-- 正文区域 -->
 <section class="content-header">
     <h1>
-        发件箱
+        回收站
     </h1>
 
 </section>

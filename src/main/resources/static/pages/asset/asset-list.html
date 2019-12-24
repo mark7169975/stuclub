@@ -27,15 +27,15 @@
 
 
     <!--分割线-->
+    <!-- 分页组件开始 -->
+    <script src="/static/plugins/angularjs/pagination.js"></script>
+    <link rel="stylesheet" href="/static/plugins/angularjs/pagination.css">
+    <!-- 分页组件结束 -->
 
-
-    <script src="/static/js/base.js"></script>
-    <script src="/static/js/angular-select2.js"></script>
+    <script src="/static/js/base_pagination.js"></script>
     <script type="text/javascript" src="/static/js/controller/baseController.js"></script>
-    <script type="text/javascript" src="/static/js/service/typeService.js"></script>
-    <script type="text/javascript" src="/static/js/service/associationService.js"></script>
-    <script type="text/javascript" src="/static/js/controller/typeController.js"></script>
-    <script type="text/javascript" src="/static/js/controller/associationController.js"></script>
+    <script type="text/javascript" src="/static/js/service/assetService.js"></script>
+    <script type="text/javascript" src="/static/js/controller/assetController.js"></script>
 
 </head>
 
@@ -98,6 +98,9 @@
                         </table>
                     </div>
                 </div>
+                <!-- 分页 -->
+                <tm-pagination conf="paginationConf"></tm-pagination>
+                <!-- 分页 -->
             </div>
         </div>
     </div>

@@ -13,6 +13,7 @@ import java.util.List;
  * @Date: 2019/12/18 16:35
  * @version: V1.0
  */
-public interface AssociationDao extends JpaRepository<Association, String>, JpaSpecificationExecutor<Association> {
+public interface AssociationDao extends JpaRepository<Association, Integer>, JpaSpecificationExecutor<Association> {
     List<Association> findByTypeCode(Integer code);
+
 }

@@ -11,7 +11,7 @@ app.service('associationService',function($http){
 	}
 	//查询实体
 	this.findOne=function(id){
-		return $http.get('../association/findOne.do?id='+id);
+		return $http.get('/association/findOne/'+id);
 	}
     //通过社团类型查询所有社团
     this.findByTypeCode=function(code){
@@ -26,8 +26,8 @@ app.service('associationService',function($http){
 		return  $http.post('../association/update.do',entity );
 	}
 	//删除
-	this.dele=function(ids){
-		return $http.get('../association/delete.do?ids='+ids);
+	this.dele=function(id){
+		return $http.delete('/association/delete/'+id);
 	}
 	//搜索
 	this.search=function(page,rows,searchEntity){

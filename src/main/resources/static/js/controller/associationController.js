@@ -1,36 +1,29 @@
- //控制层 
-app.controller('associationController' ,function($scope,$controller   ,associationService,typeService){
-	
-	$controller('baseController',{$scope:$scope});//继承
-	
+//控制层
+app.controller('associationController', function ($scope, $controller, associationService, typeService) {
+
+    $controller('baseController', {$scope: $scope});//继承
+
     //读取列表数据绑定到表单中  
-	$scope.findAll=function(){
-		associationService.findAll().success(
-			function(response){
-				$scope.list=response;
-			}			
-		);
-	}    
-	
-	//分页
-	$scope.findPage=function(page,rows){			
-		associationService.findPage(page,rows).success(
-			function(response){
-				$scope.list=response.rows;	
-				$scope.paginationConf.totalItems=response.total;//更新总记录数
-			}			
-		);
-	}
-	
-	//查询实体 
-	$scope.findOne=function(id){				
-		associationService.findOne(id).success(
-			function(response){
-				$scope.entity= response;					
-			}
-		);				
-	}
-	//查询所有社团类型
+    $scope.findAll = function () {
+        associationService.findAll().success(
+            function (response) {
+                $scope.list = response;
+            }
+        );
+    }
+
+    //分页
+    $scope.findPage = function (page, rows) {
+        associationService.findPage(page, rows).success(
+            function (response) {
+                $scope.list = response.rows;
+                $scope.paginationConf.totalItems = response.total;//更新总记录数
+            }
+        );
+    }
+
+
+    //查询所有社团类型
     $scope.findAllType = function () {
         typeService.findAll().success(
             function (response) {
@@ -38,52 +31,81 @@ app.controller('associationController' ,function($scope,$controller   ,associati
             }
         );
     }
-	//保存
-	$scope.save=function(){				
-		var serviceObject;//服务层对象  				
-		if($scope.entity.id!=null){//如果有ID
-			serviceObject=associationService.update( $scope.entity ); //修改  
-		}else{
-			serviceObject=associationService.add( $scope.entity  );//增加 
-		}				
-		serviceObject.success(
-			function(response){
-				if(response.success){
+    //查询实体
+    $scope.findOne = function (id) {
+        $scope.showOrEdit = true;
+        associationService.findOne(id).success(
+            function (response) {
+                $scope.entity = response;
+            }
+        );
+    }
+    //true为只读
+    $scope.showOrEdit = true;
+    //保存
+    $scope.save = function () {
+
+        associationService.add($scope.entity).success(
+            function (response) {
+                if (response.success) {
                     alert(response.message);
-                    $scope.entity={"typeCode":1};
-					//重新查询
-		        	//$scope.reload();//重新加载
-				}else{
-					alert(response.message);
-				}
-			}		
-		);				
-	}
-	
-	 
-	//批量删除 
-	$scope.dele=function(){			
-		//获取选中的复选框			
-		associationService.dele( $scope.selectIds ).success(
-			function(response){
-				if(response.success){
-					$scope.reloadList();//刷新列表
-					$scope.selectIds=[];
-				}						
-			}		
-		);				
-	}
-	
-	$scope.searchEntity={};//定义搜索对象 
-	
-	//搜索
-	$scope.search=function(page,rows){			
-		associationService.search(page,rows,$scope.searchEntity).success(
-			function(response){
-				$scope.list=response.data.rows;
-				$scope.paginationConf.totalItems=response.data.total;//更新总记录数
-			}			
-		);
-	}
-    
+                    $scope.entity = {"typeCode": 1};
+                    //重新查询
+                    //$scope.reload();//重新加载
+                } else {
+                    alert(response.message);
+                }
+            }
+        );
+    }
+    //修改状态
+    $scope.changeEdit = function (id) {
+        $scope.showOrEdit = false;
+        associationService.findOne(id).success(
+            function (response) {
+                $scope.entity = response;
+            }
+        );
+        typeService.findAll().success(
+            function (response) {
+                $scope.typeList = response;
+            }
+        );
+
+    }
+    //修改社团信息
+    $scope.update = function (entity) {
+        associationService.update(entity).success(
+            function (response) {
+                if (response.success) {
+                    $scope.entity = response;
+                }
+            }
+        );
+    }
+
+    //删除
+    $scope.dele = function (id) {
+        //获取选中的复选框
+        associationService.dele(id).success(
+            function (response) {
+                if (response.success) {
+                    $scope.reloadList();//刷新列表
+                }
+            }
+        );
+    }
+
+    $scope.searchEntity = {};//定义搜索对象
+
+    //搜索
+    $scope.search = function (page, rows) {
+        associationService.search(page, rows, $scope.searchEntity).success(
+            function (response) {
+                $scope.list = response.data.rows;
+                $scope.paginationConf.totalItems = response.data.total;//更新总记录数
+            }
+        );
+    }
+
 });	

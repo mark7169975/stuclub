@@ -32,9 +32,18 @@ public interface AssociationService {
      */
     List<AssociationGroup> findSearch(Map whereMap, int page, int size);
 
-    //获取页数
+    /**
+     * //获取页数
+     *
+     * @return
+     */
+
     Long getTotle();
 
     //通过code查询社团
     List<Association> findAssByCode(Integer code);
+
+    AssociationGroup findOne(Integer id);
+
+    void deleteById(Integer id);
 }

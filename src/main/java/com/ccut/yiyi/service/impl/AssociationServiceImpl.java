@@ -4,6 +4,7 @@ import com.ccut.yiyi.dao.AssociationDao;
 import com.ccut.yiyi.dao.AssociationTypeDao;
 import com.ccut.yiyi.dao.StudentDao;
 import com.ccut.yiyi.model.Association;
+import com.ccut.yiyi.model.AssociationType;
 import com.ccut.yiyi.model.Student;
 import com.ccut.yiyi.model.group.AssociationApply;
 import com.ccut.yiyi.model.group.AssociationGroup;
@@ -21,6 +22,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -68,7 +70,7 @@ public class AssociationServiceImpl implements AssociationService {
     public List<AssociationGroup> findSearch(Map whereMap, int page, int size) {
         // Specification<AssociationGroup> specification = createSpecification(whereMap);
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        //Page<AssociationGroup> all = associationDao.findAll(specification, pageRequest);
+        // Page<AssociationGroup> all = associationDao.findAll(specification, pageRequest);
         Page<Association> all = associationDao.findAll(pageRequest);
         List<Association> content = all.getContent();
         total = all.getTotalElements();
@@ -79,7 +81,6 @@ public class AssociationServiceImpl implements AssociationService {
             associationGroup.setAssociationType(associationTypeDao.findByTypeCode(ass.getTypeCode()));
             return associationGroup;
         }).collect(Collectors.toList());
-
         return collect;
     }
 
@@ -91,6 +92,29 @@ public class AssociationServiceImpl implements AssociationService {
     @Override
     public List<Association> findAssByCode(Integer code) {
         return associationDao.findByTypeCode(code);
+    }
+
+    @Override
+    public AssociationGroup findOne(Integer id) {
+
+        Optional<Association> byId = associationDao.findById(id);
+        //判断是否为空
+        if (byId.isPresent()) {
+            Association association = byId.get();
+            Student student = studentDao.findByStuCode(association.getStuCode());
+            AssociationType type = associationTypeDao.findByTypeCode(association.getTypeCode());
+            AssociationGroup associationGroup = new AssociationGroup();
+            associationGroup.setStudent(student);
+            associationGroup.setAssociation(association);
+            associationGroup.setAssociationType(type);
+            return associationGroup;
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        associationDao.deleteById(id);
     }
 
     /**

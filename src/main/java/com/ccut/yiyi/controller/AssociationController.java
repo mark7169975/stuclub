@@ -53,13 +53,49 @@ public class AssociationController {
      */
     @PostMapping("/search/{page}/{rows}")
     public Result findSearch(@RequestBody Map searchMap, @PathVariable int page, @PathVariable int rows) {
-        List<AssociationGroup> pageList = associationService.findSearch(searchMap, page, rows);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<AssociationGroup>(associationService.getTotle(),
-                pageList));
+        try {
+            List<AssociationGroup> pageList = associationService.findSearch(searchMap, page, rows);
+            return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(associationService.getTotle(),
+                    pageList));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,StatusCode.ERROR,"查询失败");
+        }
+
     }
 
+    /**
+     * @param code
+     * @return
+     */
     @GetMapping("findByTypeCode/{code}")
     public List<Association> findAssByCode(@PathVariable Integer code) {
         return associationService.findAssByCode(code);
+    }
+
+    /**
+     * 根据ID查询
+     *
+     * @param id ID
+     * @return
+     */
+    @GetMapping("findOne/{id}")
+    public AssociationGroup findOne(@PathVariable Integer id) {
+        return associationService.findOne(id);
+    }
+    /**
+     * 删除
+     * @param id
+     */
+    @DeleteMapping("delete/{id}")
+    public Result delete(@PathVariable Integer id ){
+        try {
+            associationService.deleteById(id);
+            return new Result(true,StatusCode.OK,"删除成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(false,StatusCode.ERROR,"删除失败");
+        }
+
     }
 }

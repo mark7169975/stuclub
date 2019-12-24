@@ -54,6 +54,7 @@
     <script type="text/javascript" src="/static/js/service/typeService.js"></script>
     <script type="text/javascript" src="/static/js/controller/baseController.js"></script>
     <script type="text/javascript" src="/static/js/controller/associationController.js"></script>
+    <script type="text/javascript" src="/static/js/controller/typeController.js"></script>
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="associationController">
@@ -110,23 +111,18 @@
                         <td>{{entity.student.stuName}}</td>
                         <td>{{entity.associationType.typeName}}</td>
                         <td class="text-center">
-                            <button type="button" class="btn bg-olive btn-xs">详情</button>
-                            <button type="button" class="btn bg-olive btn-xs">编辑</button>
-                            <button type="button" class="btn bg-olive btn-xs">删除</button>
+                            <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
+                                    data-target="#editModal" ng-click="findOne(entity.association.assId)">详情
+                            </button>
+                            <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
+                                    data-target="#editModal" ng-click="changeEdit(entity.association.assId)">编辑
+                            </button>
+                            <button type="button" class="btn bg-olive btn-xs" ng-click="dele(entity.association.assId)">删除</button>
                         </td>
                     </tr>
 
                     </tbody>
-                    <!--
-                <tfoot>
-                <tr>
-                <th>Rendering engine</th>
-                <th>Browser</th>
-                <th>Platform(s)</th>
-                <th>Engine version</th>
-                <th>CSS grade</th>
-                </tr>
-                </tfoot>-->
+
                 </table>
                 <!--数据列表/-->
                 <!-- 分页 -->
@@ -157,90 +153,68 @@
                     &times;
                 </button>
                 <h4 class="modal-title" id="myModalLabel">
-                    成员信息
+                    社团信息
                 </h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="row margin-bottom">
                         <div class="col-md-2 text-center">
-                            <label class="control-label">姓名: </label>
+                            <label class="control-label">社徽: </label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="studentName" class="form-control"/>
+                            <img src="/static/img/user2-160x160.jpg" alt="association img"
+                                 style="vertical-align: middle;border-radius: 50%;"/>
+                            <span ng-if=!showOrEdit>
+                                <button class="btn btn-default">修改社徽</button>
+                            </span>
+
                         </div>
                     </div>
                     <div class="row margin-bottom">
                         <div class="col-md-2 text-center">
-                            <label class="control-label">学号: </label>
+                            <label class="control-label">社团名称: </label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="studentCode" class="form-control"/>
+                            <input type="text" name="cluName" ng-model="entity.association.assName"
+                                   ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
                         <div class="col-md-2 text-center">
-                            <label class="control-label">生日: </label>
+                            <label class="control-label">所属类型: </label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="birthday" class="form-control"/>
+                            <span ng-if=showOrEdit>
+                                 <input type="text" name="stuName" ng-model="entity.associationType.typeName" ng-readonly=showOrEdit
+                                        class="form-control"/>
+                            </span>
+                            <span ng-if=!showOrEdit>
+                            <select class="select2 form-control" ng-model="entity.associationType.typeCode"
+                                    ng-init="entity.associationType.typeCode"
+                                    ng-options="x.typeCode as x.typeName for x in typeList" ng-readonly=showOrEdit>
+                            </select>
+                                </span>
+                        </div>
+                    </div>
+
+                    <div class="row margin-bottom">
+                        <div class="col-md-2 text-center">
+                            <label class="control-label">社长:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" name="stuName" ng-model="entity.student.stuName" ng-readonly=showOrEdit
+                                   class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
                         <div class="col-md-2 text-center">
-                            <label class="control-label">性别: </label>
-                        </div>
-                        <div class="col-md-8" style="padding-top: 7px;">
-                            <input type="radio" name="sex" id="maleRadio"/> 男
-                            <input type="radio" name="sex" id="femaleRadio"/> 女
-                        </div>
-                    </div>
-                    <div class="row margin-bottom">
-                        <div class="col-md-2 text-center">
-                            <label class="control-label">邮件</label>
+                            <label class="control-label">社团描述</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="mail" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row margin-bottom">
-                        <div class="col-md-2 text-center">
-                            <label class="control-label">内部邮件</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" name="localMail" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row margin-bottom">
-                        <div class="col-md-2 text-center">
-                            <label class="control-label">联系电话</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" name="phone" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row margin-bottom">
-                        <div class="col-md-2 text-center">
-                            <label class="control-label">QQ</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" name="qq" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row margin-bottom">
-                        <div class="col-md-2 text-center">
-                            <label class="control-label">学院</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" name="college" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row margin-bottom">
-                        <div class="col-md-2 text-center">
-                            <Label class="control-label">专业</Label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" name="major" class="form-control"/>
+                            <input type="text" name="assDescription" ng-model="entity.association.assDescription"
+                                   ng-readonly=showOrEdit
+                                   class="form-control"/>
                         </div>
                     </div>
                 </form>
@@ -248,9 +222,13 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
-                <button type="button" class="btn btn-primary">
-                    提交更改
-                </button>
+                <span ng-if=!showOrEdit>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </span>
+
+
             </div>
         </div>
     </div>
@@ -302,50 +280,6 @@
 <script src="/static/plugins/bootstrap-slider/bootstrap-slider.js"></script>
 <script src="/static/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
 <script src="/static/plugins/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-<script>
-    $(document).ready(function () {
-        // 选择框
-        $(".select2").select2();
-
-        // WYSIHTML5编辑器
-        $(".textarea").wysihtml5({
-            locale: 'zh-CN'
-        });
-    });
-
-
-    // 设置激活菜单
-    function setSidebarActive(tagUri) {
-        var liObj = $("#" + tagUri);
-        if (liObj.length > 0) {
-            liObj.parent().parent().addClass("active");
-            liObj.addClass("active");
-        }
-    }
-
-
-    $(document).ready(function () {
-
-        // 激活导航位置
-        setSidebarActive("admin-datalist");
-
-        // 列表按钮
-        $("#dataList td input[type='checkbox']").iCheck({
-            checkboxClass: 'icheckbox_square-blue',
-            increaseArea: '20%'
-        });
-        // 全选操作
-        $("#selall").click(function () {
-            var clicks = $(this).is(':checked');
-            if (!clicks) {
-                $("#dataList td input[type='checkbox']").iCheck("uncheck");
-            } else {
-                $("#dataList td input[type='checkbox']").iCheck("check");
-            }
-            $(this).data("clicks", !clicks);
-        });
-    });
-</script>
 </body>
 
 </html>

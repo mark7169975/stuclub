@@ -4,11 +4,6 @@ app.controller('typeController', function ($scope, $controller, typeService) {
     $controller('baseController', {$scope: $scope});//继承
 
     //读取列表数据绑定到表单中
-    $scope.typeList = [
-            {typeId: "1", typeName: "学术研究", typeCode: "1"},
-            {typeId: "2", typeName: "体育竞技", typeCode: "2"},
-            {typeId: "3", typeName: "兴趣爱好", typeCode: "3"}
-            ];
     $scope.findAllType = function () {
         typeService.findAll().success(
             function (response) {

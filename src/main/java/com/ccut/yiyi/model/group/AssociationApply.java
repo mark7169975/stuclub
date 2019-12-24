@@ -1,6 +1,5 @@
 package com.ccut.yiyi.model.group;
 
-import com.ccut.yiyi.model.AssociationType;
 import lombok.Data;
 import lombok.ToString;
 
@@ -22,5 +21,5 @@ public class AssociationApply implements Serializable {
     private String stuCollege;
     private String stuMajor;
     private String assDescription;
-    private AssociationType associationType;
+    private Integer typeCode;
 }

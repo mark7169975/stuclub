@@ -184,7 +184,7 @@
                             <div class="row form-group">
                                 <div class="col-md-8">
                                     <label class="control-label">社团: </label>
-                                    <select class="select2 form-control" ng-model="typeCode"
+                                    <select class="select2 form-control" ng-init="typeCode = 1" ng-model="typeCode"
                                             ng-options="t.typeCode as t.typeName for t in typeList">
                                     </select>
                                     <select class="select2 form-control" ng-model="entity.associationId"
@@ -199,7 +199,7 @@
                                 <div class="col-md-8">
                                     <div class="form-group">
                                         <label class="control-label">角色: </label>
-                                        <select class="select2 form-control" ng-model="entity.roleCode"
+                                        <select class="select2 form-control" ng-init="entity.roleCode = 3" ng-model="entity.roleCode"
                                                 ng-options="r.roleCode as r.roleName for r in roleList">
                                         </select>
                                     </div>

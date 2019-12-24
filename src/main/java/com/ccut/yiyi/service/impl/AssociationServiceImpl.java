@@ -41,16 +41,14 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Override
     public void add(AssociationApply associationApply) {
-        System.out.println(associationApply + "aaa");
         //设置社团的信息
         Association association = new Association();
         association.setAssName(associationApply.getAssName());
         association.setStuCode(associationApply.getStuCode());
         association.setAssDescription(associationApply.getAssDescription());
-        association.setTypeCode(associationApply.getAssociationType().getTypeCode());
+        association.setTypeCode(associationApply.getTypeCode());
         //添加社团
         Association save = associationDao.save(association);
-        System.out.println("save:" + save);
         //设置社长的学生信息
         Student student = new Student();
         student.setStuCode(associationApply.getStuCode());

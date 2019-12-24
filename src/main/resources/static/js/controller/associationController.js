@@ -1,5 +1,5 @@
  //控制层 
-app.controller('associationController' ,function($scope,$controller   ,associationService){
+app.controller('associationController' ,function($scope,$controller   ,associationService,typeService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -30,12 +30,15 @@ app.controller('associationController' ,function($scope,$controller   ,associati
 			}
 		);				
 	}
-    $scope.typeList = [
-        {typeId: "1", typeName: "学术研究", typeCode: "1"},
-        {typeId: "2", typeName: "体育竞技", typeCode: "2"},
-        {typeId: "3", typeName: "兴趣爱好", typeCode: "3"}
-    ];
-	//保存 
+	//查询所有社团类型
+    $scope.findAllType = function () {
+        typeService.findAll().success(
+            function (response) {
+                $scope.typeList = response;
+            }
+        );
+    }
+	//保存
 	$scope.save=function(){				
 		var serviceObject;//服务层对象  				
 		if($scope.entity.id!=null){//如果有ID
@@ -47,9 +50,8 @@ app.controller('associationController' ,function($scope,$controller   ,associati
 			function(response){
 				if(response.success){
                     alert(response.message);
-                    $scope.entity={};
-                    //window.location.href("http://localhost:8888/static/pages/club/club-register.html");
-					//重新查询 
+                    $scope.entity={"typeCode":1};
+					//重新查询
 		        	//$scope.reload();//重新加载
 				}else{
 					alert(response.message);

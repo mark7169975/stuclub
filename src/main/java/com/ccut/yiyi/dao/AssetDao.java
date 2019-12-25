@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @Date: 2019/12/18 16:35
  * @version: V1.0
  */
-public interface AssetDao extends JpaRepository<Asset,String>,JpaSpecificationExecutor<Asset> {
+public interface AssetDao extends JpaRepository<Asset,Integer>,JpaSpecificationExecutor<Asset> {
 }

@@ -54,6 +54,36 @@ public class StudentController {
             e.printStackTrace();
             return new Result(false, StatusCode.ERROR, "添加失败");
         }
+    }
+
+    /**
+     * 根据ID查询
+     * @param id ID
+     * @return
+     */
+    @GetMapping("findOne/{id}")
+    public AssociationGroup findOne(@PathVariable Integer id){
+        try {
+            return studentService.findById(id) ;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * 删除
+     * @param id
+     */
+    @DeleteMapping("delete/{id}")
+    public Result delete(@PathVariable Integer id ){
+        try {
+            studentService.deleteById(id);
+            return new Result(true,StatusCode.OK,"删除成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, StatusCode.ERROR, "删除失败");
+        }
+
 
     }
 }

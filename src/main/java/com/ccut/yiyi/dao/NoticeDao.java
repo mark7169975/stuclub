@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @Date: 2019/12/18 16:36
  * @version: V1.0
  */
-public interface NoticeDao extends JpaRepository<Notice,String>,JpaSpecificationExecutor<Notice> {
+public interface NoticeDao extends JpaRepository<Notice,Integer>,JpaSpecificationExecutor<Notice> {
 }

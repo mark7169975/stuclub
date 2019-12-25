@@ -11,7 +11,7 @@ app.service('studentService',function($http){
 	}
 	//查询实体
 	this.findOne=function(id){
-		return $http.get('../student/findOne.do?id='+id);
+		return $http.get('/student/findOne/'+id);
 	}
 	//增加
 	this.add=function(entity){
@@ -22,8 +22,8 @@ app.service('studentService',function($http){
 		return  $http.post('../student/update.do',entity );
 	}
 	//删除
-	this.dele=function(ids){
-		return $http.get('../student/delete.do?ids='+ids);
+	this.dele=function(id){
+		return $http.delete('/student/delete/'+id);
 	}
 	//搜索
 	this.search=function(page,rows,searchEntity){

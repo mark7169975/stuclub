@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @Date: 2019/12/18 16:36
  * @version: V1.0
  */
-public interface EmailDao extends JpaRepository<Email,String>,JpaSpecificationExecutor<Email> {
+public interface EmailDao extends JpaRepository<Email,Integer>,JpaSpecificationExecutor<Email> {
 }

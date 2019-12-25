@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @Date: 2019/12/18 16:38
  * @version: V1.0
  */
-public interface AssociationTypeDao extends JpaRepository<AssociationType, String>,
+public interface AssociationTypeDao extends JpaRepository<AssociationType, Integer>,
         JpaSpecificationExecutor<AssociationType> {
     AssociationType findByTypeCode(Integer code);
 }

@@ -21,15 +21,26 @@ app.controller('studentController' ,function($scope,$controller   ,studentServic
 			}			
 		);
 	}
-	
+    //true为只读
+    $scope.showOrEdit = true;
 	//查询实体 
-	$scope.findOne=function(id){				
+	$scope.findOne=function(id){
+        $scope.showOrEdit = true;
 		studentService.findOne(id).success(
 			function(response){
 				$scope.entity= response;					
 			}
 		);				
 	}
+	//修改状态
+    $scope.changeEdit = function (id) {
+        $scope.showOrEdit = false;
+        studentService.findOne(id).success(
+            function (response) {
+                $scope.entity = response;
+            }
+        );
+    }
 	//查询所有角色
     $scope.findAllRole=function(){
         roleService.findAll().success(
@@ -77,14 +88,14 @@ app.controller('studentController' ,function($scope,$controller   ,studentServic
 	
 	 
 	//批量删除 
-	$scope.dele=function(){			
+	$scope.dele=function(id){
 		//获取选中的复选框			
-		studentService.dele( $scope.selectIds ).success(
+		studentService.dele(id).success(
 			function(response){
 				if(response.success){
+					alert(response.message)
 					$scope.reloadList();//刷新列表
-					$scope.selectIds=[];
-				}						
+				}
 			}		
 		);				
 	}

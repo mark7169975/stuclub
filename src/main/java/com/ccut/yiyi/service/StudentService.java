@@ -25,4 +25,8 @@ public interface StudentService {
     Page<AssociationGroup> findSearch(Map whereMap, int page, int size);
 
     void add(Student student);
+
+    AssociationGroup findById(Integer id);
+
+    void deleteById(Integer id);
 }

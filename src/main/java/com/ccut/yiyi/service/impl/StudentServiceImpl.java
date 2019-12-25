@@ -52,9 +52,7 @@ public class StudentServiceImpl implements StudentService {
             AssociationGroup associationGroup = new AssociationGroup();
             associationGroup.setStudent(s);
             Optional<Association> associationDaoById = associationDao.findById(s.getAssociationId());
-            if (associationDaoById.isPresent()) {
-                associationGroup.setAssociation(associationDaoById.get());
-            }
+            associationDaoById.ifPresent(associationGroup::setAssociation);
             return associationGroup;
         });
     }
@@ -63,6 +61,30 @@ public class StudentServiceImpl implements StudentService {
     public void add(Student student) {
         student.setStuPwd(student.getStuCode());
         studentDao.save(student);
+    }
+
+    @Override
+    public AssociationGroup findById(Integer id) {
+        Optional<Student> byId = studentDao.findById(id);
+        if(byId.isPresent()){
+            Student student = byId.get();
+            AssociationGroup associationGroup = new AssociationGroup();
+            associationGroup.setStudent(student);
+            Optional<Association> byId1 = associationDao.findById(student.getAssociationId());
+            if(byId1.isPresent()){
+                Association association = byId1.get();
+                associationGroup.setAssociation(association);
+                associationGroup.setAssociation(association);
+                return associationGroup;
+            }
+
+        }
+return null;
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        studentDao.deleteById(id);
     }
 
     /**

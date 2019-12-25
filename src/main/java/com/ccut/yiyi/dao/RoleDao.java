@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @Date: 2019/12/18 16:37
  * @version: V1.0
  */
-public interface RoleDao extends JpaRepository<Role,String>,JpaSpecificationExecutor<Role> {
+public interface RoleDao extends JpaRepository<Role,Integer>,JpaSpecificationExecutor<Role> {
 }

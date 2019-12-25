@@ -133,9 +133,11 @@
                         <td>{{entity.student.stuMajor}}</td>
                         <td>{{entity.association.assName}}</td>
                         <td class="text-center">
-                            <button type="button" class="btn bg-olive btn-xs">详情</button>
-                            <button type="button" class="btn bg-olive btn-xs">编辑</button>
-                            <button type="button" class="btn bg-olive btn-xs">删除</button>
+                            <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
+                                    data-target="#editModal" ng-click="findOne(entity.student.stuId)">详情</button>
+                            <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
+                                    data-target="#editModal" ng-click="changeEdit(entity.student.stuId)">编辑</button>
+                            <button type="button" class="btn bg-olive btn-xs" ng-click="dele(entity.student.stuId)">删除</button>
                         </td>
                     </tr>
 
@@ -191,7 +193,7 @@
                             <label class="control-label">姓名: </label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="studentName" class="form-control"/>
+                            <input type="text" name="studentName" ng-model="entity.student.stuName"  ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -199,7 +201,7 @@
                             <label class="control-label">学号: </label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="studentCode" class="form-control"/>
+                            <input type="text" name="studentCode" ng-model="entity.student.stuCode" ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -207,7 +209,7 @@
                             <label class="control-label">生日: </label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="birthday" class="form-control"/>
+                            <input type="text" name="birthday" ng-model="entity.student.stuBirthday" ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -215,8 +217,8 @@
                             <label class="control-label">性别: </label>
                         </div>
                         <div class="col-md-8" style="padding-top: 7px;">
-                            <input type="radio" name="sex" id="maleRadio"/> 男
-                            <input type="radio" name="sex" id="femaleRadio"/> 女
+                            <input type="radio" name="sex" id="maleRadio" /> 男
+                            <input type="radio" name="sex" id="femaleRadio" /> 女
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -224,15 +226,7 @@
                             <label class="control-label">邮件</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="mail" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row margin-bottom">
-                        <div class="col-md-2 text-center">
-                            <label class="control-label">内部邮件</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" name="localMail" class="form-control"/>
+                            <input type="text" name="mail" ng-model="entity.student.stuEmail" ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -240,7 +234,7 @@
                             <label class="control-label">联系电话</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="phone" class="form-control"/>
+                            <input type="text" name="phone" ng-model="entity.student.stuTel" ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -248,7 +242,7 @@
                             <label class="control-label">QQ</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="qq" class="form-control"/>
+                            <input type="text" name="qq" ng-model="entity.student.stuQq" ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -256,7 +250,7 @@
                             <label class="control-label">学院</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="college" class="form-control"/>
+                            <input type="text" name="college" ng-model="entity.student.stuCollege" ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -264,7 +258,15 @@
                             <Label class="control-label">专业</Label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="major" class="form-control"/>
+                            <input type="text" name="major" ng-model="entity.student.stuMajor" ng-readonly=showOrEdit class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row margin-bottom">
+                        <div class="col-md-2 text-center">
+                            <Label class="control-label">个人简介</Label>
+                        </div>
+                        <div class="col-md-8">
+                            <textarea cols="80" rows="8" ng-model="entity.student.stuDescription" ng-readonly=showOrEdit class="form-control"></textarea>
                         </div>
                     </div>
                 </form>
@@ -272,9 +274,11 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
+                <span ng-if=!showOrEdit>
                 <button type="button" class="btn btn-primary">
                     提交更改
                 </button>
+                </span>
             </div>
         </div>
     </div>

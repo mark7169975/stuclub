@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @Date: 2019/12/18 16:33
  * @version: V1.0
  */
-public interface ActivityDao extends JpaRepository<Activity,String>,JpaSpecificationExecutor<Activity> {
+public interface ActivityDao extends JpaRepository<Activity,Integer>,JpaSpecificationExecutor<Activity> {
 }

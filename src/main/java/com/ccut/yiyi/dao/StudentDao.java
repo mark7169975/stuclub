@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @Date: 2019/12/18 16:37
  * @version: V1.0
  */
-public interface StudentDao extends JpaRepository<Student,String>,JpaSpecificationExecutor<Student> {
+public interface StudentDao extends JpaRepository<Student,Integer>,JpaSpecificationExecutor<Student> {
     Student findByStuCode(String stuCode);
+
 }

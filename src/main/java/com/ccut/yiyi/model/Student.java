@@ -1,6 +1,7 @@
 package com.ccut.yiyi.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Date;
  * @version: V1.0
  */
 @Data
+@ToString
 @Entity
 @Table(name="student")
 public class Student {

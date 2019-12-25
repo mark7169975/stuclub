@@ -4,6 +4,7 @@ import com.ccut.yiyi.common.PageResult;
 import com.ccut.yiyi.common.Result;
 import com.ccut.yiyi.common.StatusCode;
 import com.ccut.yiyi.model.Student;
+import com.ccut.yiyi.model.group.AssociationGroup;
 import com.ccut.yiyi.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +35,7 @@ public class StudentController {
      */
     @PostMapping("/search/{page}/{rows}")
     public Result findSearch(@RequestBody Map searchMap, @PathVariable int page, @PathVariable int rows) {
-        Page<Student> pageList = studentService.findSearch(searchMap, page, rows);
+        Page<AssociationGroup> pageList = studentService.findSearch(searchMap, page, rows);
         return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(pageList.getTotalElements(), pageList
                 .getContent()));
     }
@@ -47,7 +48,6 @@ public class StudentController {
     @PostMapping("add")
     public Result add(@RequestBody Student student) {
         try {
-            System.out.println(student);
             studentService.add(student);
             return new Result(true, StatusCode.OK, "增加成功");
         } catch (Exception e) {

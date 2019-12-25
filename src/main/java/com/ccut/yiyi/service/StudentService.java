@@ -1,6 +1,7 @@
 package com.ccut.yiyi.service;
 
 import com.ccut.yiyi.model.Student;
+import com.ccut.yiyi.model.group.AssociationGroup;
 import org.springframework.data.domain.Page;
 
 import java.util.Map;
@@ -21,7 +22,7 @@ public interface StudentService {
      * @param size
      * @return
      */
-    Page<Student> findSearch(Map whereMap, int page, int size);
+    Page<AssociationGroup> findSearch(Map whereMap, int page, int size);
 
     void add(Student student);
 }

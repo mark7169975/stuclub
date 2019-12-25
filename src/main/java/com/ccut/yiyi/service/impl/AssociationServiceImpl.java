@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @ClassName: AssociationServiceImpl
@@ -67,21 +66,16 @@ public class AssociationServiceImpl implements AssociationService {
     Long total = 0L;
 
     @Override
-    public List<AssociationGroup> findSearch(Map whereMap, int page, int size) {
-        // Specification<AssociationGroup> specification = createSpecification(whereMap);
+    public Page<AssociationGroup> findSearch(Map whereMap, int page, int size) {
+        Specification<Association> specification = createSpecification(whereMap);
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        // Page<AssociationGroup> all = associationDao.findAll(specification, pageRequest);
-        Page<Association> all = associationDao.findAll(pageRequest);
-        List<Association> content = all.getContent();
-        total = all.getTotalElements();
-        List<AssociationGroup> collect = content.stream().map(ass -> {
+        return associationDao.findAll(specification, pageRequest).map(ass -> {
             AssociationGroup associationGroup = new AssociationGroup();
             associationGroup.setAssociation(ass);
             associationGroup.setStudent(studentDao.findByStuCode(ass.getStuCode()));
             associationGroup.setAssociationType(associationTypeDao.findByTypeCode(ass.getTypeCode()));
             return associationGroup;
-        }).collect(Collectors.toList());
-        return collect;
+        });
     }
 
     @Override
@@ -123,12 +117,12 @@ public class AssociationServiceImpl implements AssociationService {
      * @param searchMap
      * @return
      */
-    private Specification<AssociationGroup> createSpecification(Map searchMap) {
+    private Specification<Association> createSpecification(Map searchMap) {
 
-        return new Specification<AssociationGroup>() {
+        return new Specification<Association>() {
 
             @Override
-            public Predicate toPredicate(Root<AssociationGroup> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Association> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicateList = new ArrayList<Predicate>();
                 // 社团名称
                 if (searchMap.get("ass_name") != null && !"".equals(searchMap.get("ass_name"))) {
@@ -140,7 +134,16 @@ public class AssociationServiceImpl implements AssociationService {
                     predicateList.add(cb.like(root.get("stu_code").as(String.class), "%" + (String) searchMap.get
                             ("stu_code") + "%"));
                 }
-
+                // 社团徽章
+                if (searchMap.get("ass_avatar") != null && !"".equals(searchMap.get("ass_avatar"))) {
+                    predicateList.add(cb.like(root.get("ass_avatar").as(String.class), "%" + (String) searchMap.get
+                            ("ass_avatar") + "%"));
+                }
+                // 社团描述
+                if (searchMap.get("ass_description") != null && !"".equals(searchMap.get("ass_description"))) {
+                    predicateList.add(cb.like(root.get("ass_description").as(String.class), "%" + (String) searchMap
+                            .get("ass_description") + "%"));
+                }
                 return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
 
             }

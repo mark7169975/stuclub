@@ -1,7 +1,10 @@
 package com.ccut.yiyi.service.impl;
 
+import com.ccut.yiyi.dao.AssociationDao;
 import com.ccut.yiyi.dao.StudentDao;
+import com.ccut.yiyi.model.Association;
 import com.ccut.yiyi.model.Student;
+import com.ccut.yiyi.model.group.AssociationGroup;
 import com.ccut.yiyi.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @ClassName: StudentServiceImpl
@@ -28,20 +32,31 @@ import java.util.Map;
 public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudentDao studentDao;
-
+    @Autowired
+    private AssociationDao associationDao;
 
     /**
      * 条件查询+分页
+     *
      * @param whereMap
      * @param page
      * @param size
      * @return
      */
     @Override
-    public Page<Student> findSearch(Map whereMap, int page, int size) {
+    public Page<AssociationGroup> findSearch(Map whereMap, int page, int size) {
         Specification<Student> specification = createSpecification(whereMap);
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        return studentDao.findAll(specification, pageRequest);
+        //把student分页数据转换成组合类分页数据
+        return studentDao.findAll(specification, pageRequest).map(s -> {
+            AssociationGroup associationGroup = new AssociationGroup();
+            associationGroup.setStudent(s);
+            Optional<Association> associationDaoById = associationDao.findById(s.getAssociationId());
+            if (associationDaoById.isPresent()) {
+                associationGroup.setAssociation(associationDaoById.get());
+            }
+            return associationGroup;
+        });
     }
 
     @Override

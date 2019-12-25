@@ -3,6 +3,7 @@ package com.ccut.yiyi.service;
 import com.ccut.yiyi.model.Association;
 import com.ccut.yiyi.model.group.AssociationApply;
 import com.ccut.yiyi.model.group.AssociationGroup;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public interface AssociationService {
      * @param size
      * @return
      */
-    List<AssociationGroup> findSearch(Map whereMap, int page, int size);
+    Page<AssociationGroup> findSearch(Map whereMap, int page, int size);
 
     /**
      * //获取页数

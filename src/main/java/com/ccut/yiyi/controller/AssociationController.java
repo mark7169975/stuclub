@@ -8,6 +8,7 @@ import com.ccut.yiyi.model.group.AssociationApply;
 import com.ccut.yiyi.model.group.AssociationGroup;
 import com.ccut.yiyi.service.AssociationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,12 +55,12 @@ public class AssociationController {
     @PostMapping("/search/{page}/{rows}")
     public Result findSearch(@RequestBody Map searchMap, @PathVariable int page, @PathVariable int rows) {
         try {
-            List<AssociationGroup> pageList = associationService.findSearch(searchMap, page, rows);
-            return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(associationService.getTotle(),
-                    pageList));
+            Page<AssociationGroup> pageList = associationService.findSearch(searchMap, page, rows);
+            return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(pageList.getTotalElements(),
+                    pageList.getContent()));
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,StatusCode.ERROR,"查询失败");
+            return new Result(false, StatusCode.ERROR, "查询失败");
         }
 
     }
@@ -83,18 +84,20 @@ public class AssociationController {
     public AssociationGroup findOne(@PathVariable Integer id) {
         return associationService.findOne(id);
     }
+
     /**
      * 删除
+     *
      * @param id
      */
     @DeleteMapping("delete/{id}")
-    public Result delete(@PathVariable Integer id ){
+    public Result delete(@PathVariable Integer id) {
         try {
             associationService.deleteById(id);
-            return new Result(true,StatusCode.OK,"删除成功");
-        }catch (Exception e){
+            return new Result(true, StatusCode.OK, "删除成功");
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,StatusCode.ERROR,"删除失败");
+            return new Result(false, StatusCode.ERROR, "删除失败");
         }
 
     }

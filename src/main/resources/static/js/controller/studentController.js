@@ -48,7 +48,7 @@ app.controller('studentController' ,function($scope,$controller   ,studentServic
     }
     //监视typeCode的改变查询社团
 	$scope.$watch('typeCode',function (newValue, oldValue) {
-        associationService.findByTypeCode(newValue).success(
+        associationService.findByTypeCode(newValue==null?1:newValue).success(
         	function (response) {
 				$scope.AssList=response;
             }

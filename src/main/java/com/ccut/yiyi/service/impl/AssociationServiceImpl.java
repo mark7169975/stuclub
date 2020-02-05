@@ -1,11 +1,7 @@
 package com.ccut.yiyi.service.impl;
 
-import com.ccut.yiyi.dao.AssociationDao;
-import com.ccut.yiyi.dao.AssociationTypeDao;
-import com.ccut.yiyi.dao.StudentDao;
-import com.ccut.yiyi.model.Association;
-import com.ccut.yiyi.model.AssociationType;
-import com.ccut.yiyi.model.Student;
+import com.ccut.yiyi.dao.*;
+import com.ccut.yiyi.model.*;
 import com.ccut.yiyi.model.group.AssociationApply;
 import com.ccut.yiyi.model.group.AssociationGroup;
 import com.ccut.yiyi.service.AssociationService;
@@ -14,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -32,6 +29,7 @@ import java.util.Optional;
  * @version: V1.0
  */
 @Service
+@Transactional
 public class AssociationServiceImpl implements AssociationService {
     @Autowired
     private AssociationDao associationDao;
@@ -39,7 +37,15 @@ public class AssociationServiceImpl implements AssociationService {
     private StudentDao studentDao;
     @Autowired
     private AssociationTypeDao associationTypeDao;
+    @Autowired
+    private StuAssoDao stuAssoDao;
+    @Autowired
+    private StuRoleDao stuRoleDao;
 
+    /**
+     * @param associationApply
+     * 申请社团的service实现
+     */
     @Override
     public void add(AssociationApply associationApply) {
         //设置社团的信息
@@ -48,7 +54,7 @@ public class AssociationServiceImpl implements AssociationService {
         association.setStuCode(associationApply.getStuCode());
         association.setAssDescription(associationApply.getAssDescription());
         association.setTypeCode(associationApply.getTypeCode());
-        //添加社团
+        //添加社团到数据库
         Association save = associationDao.save(association);
         //设置社长的学生信息
         Student student = new Student();
@@ -56,11 +62,27 @@ public class AssociationServiceImpl implements AssociationService {
         student.setStuName(associationApply.getStuName());
         student.setStuCollege(associationApply.getStuCollege());
         student.setStuMajor(associationApply.getStuMajor());
+        student.setStuEmail(associationApply.getStuEmail());
+        student.setStuQq(associationApply.getStuQq());
+        student.setStuTel(associationApply.getStuTel());
+        //设置默认密码为学号
         student.setStuPwd(associationApply.getStuCode());
-        student.setAssociationId(save.getAssId());
-        student.setRoleCode(2);//社团管理人员角色编号为2
+        //添加学生信息到数据库
         studentDao.save(student);
-
+        //设置学生和社团的对应关系 多对多
+        StuAsso stuAsso = new StuAsso();
+        stuAsso.setAssId(save.getAssId());
+        stuAsso.setStuCode(student.getStuCode());
+        //添加学生和社团的对应关系到数据库
+        stuAssoDao.save(stuAsso);
+        //设置学生和社团的角色关系 多对多
+        StuRole stuRole = new StuRole();
+        stuRole.setStuCode(student.getStuCode());
+        //创建社团 默认权限为社团管理员 社团管理编号为2001
+        stuRole.setRoleCode(2001);
+        //设置对应管理的社团id
+        stuRole.setAssoId(save.getAssId());
+        stuRoleDao.save(stuRole);
     }
 
     Long total = 0L;

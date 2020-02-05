@@ -19,9 +19,7 @@ public class Association implements Serializable {
     @Id
     @Column(name="ass_id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer assId;//
-
-
+    private Integer assId;//社团id
 
     @Column(name="ass_name")
     private String assName;//社团名称

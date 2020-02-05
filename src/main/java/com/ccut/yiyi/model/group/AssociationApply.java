@@ -6,7 +6,7 @@ import lombok.ToString;
 import java.io.Serializable;
 
 /**
- * @ClassName: AssociationApply 社团申请组合实体类
+ * @ClassName: AssociationApply 社团申请页面所需要的实体类
  * @Description: TODO
  * @Author: Mark
  * @Date: 2019/12/22 14:01
@@ -22,4 +22,7 @@ public class AssociationApply implements Serializable {
     private String stuMajor;
     private String assDescription;
     private Integer typeCode;
+    private String stuEmail;
+    private String stuTel;
+    private String stuQq;
 }

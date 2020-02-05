@@ -2,7 +2,6 @@ package com.ccut.yiyi.service.impl;
 
 import com.ccut.yiyi.dao.AssociationDao;
 import com.ccut.yiyi.dao.StudentDao;
-import com.ccut.yiyi.model.Association;
 import com.ccut.yiyi.model.Student;
 import com.ccut.yiyi.model.group.AssociationGroup;
 import com.ccut.yiyi.service.StudentService;
@@ -51,8 +50,8 @@ public class StudentServiceImpl implements StudentService {
         return studentDao.findAll(specification, pageRequest).map(s -> {
             AssociationGroup associationGroup = new AssociationGroup();
             associationGroup.setStudent(s);
-            Optional<Association> associationDaoById = associationDao.findById(s.getAssociationId());
-            associationDaoById.ifPresent(associationGroup::setAssociation);
+          //  Optional<Association> associationDaoById = associationDao.findById(s.getAssociationId());
+          //  associationDaoById.ifPresent(associationGroup::setAssociation);
             return associationGroup;
         });
     }
@@ -70,13 +69,13 @@ public class StudentServiceImpl implements StudentService {
             Student student = byId.get();
             AssociationGroup associationGroup = new AssociationGroup();
             associationGroup.setStudent(student);
-            Optional<Association> byId1 = associationDao.findById(student.getAssociationId());
+           /* Optional<Association> byId1 = associationDao.findById(student.getAssociationId());
             if(byId1.isPresent()){
                 Association association = byId1.get();
                 associationGroup.setAssociation(association);
                 associationGroup.setAssociation(association);
                 return associationGroup;
-            }
+            }*/
 
         }
 return null;

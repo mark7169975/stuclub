@@ -17,10 +17,10 @@ app.service('associationService',function($http){
     this.findByTypeCode=function(code){
         return $http.get('/association/findByTypeCode/'+code);
     }
-	//增加
+	//社团申请的service,entity为传输的添加数据
 	this.add=function(entity){
 		return  $http.post('/association/add',entity );
-	}
+	};
 	//修改 
 	this.update=function(entity){
 		return  $http.post('../association/update.do',entity );

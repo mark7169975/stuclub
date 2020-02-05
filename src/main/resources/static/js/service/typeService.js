@@ -4,7 +4,7 @@ app.service('typeService',function($http){
 	//读取列表数据绑定到表单中
 	this.findAll=function(){
 		return $http.get('/type/findAll');
-	}
+	};
 
 	//分页 
 	this.findPage=function(page,rows){

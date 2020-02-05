@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public interface AssociationService {
     /**
-     * 增加
+     * 社团申请service接口
      *
      * @param associationApply
      */

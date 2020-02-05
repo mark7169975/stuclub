@@ -42,22 +42,22 @@ app.controller('associationController', function ($scope, $controller, associati
     }
     //true为只读
     $scope.showOrEdit = true;
-    //保存
+    //社团申请提交数据
     $scope.save = function () {
-
         associationService.add($scope.entity).success(
             function (response) {
                 if (response.success) {
+                    //添加成功弹出成功信息
                     alert(response.message);
-                    $scope.entity = {"typeCode": 1};
-                    //重新查询
-                    //$scope.reload();//重新加载
+                    //给社团类型赋值默认1000，避免下拉框显示不成功
+                    $scope.entity = {"typeCode": 1000};
                 } else {
+                    //添加失败弹出失败信息
                     alert(response.message);
                 }
             }
         );
-    }
+    };
     //修改状态
     $scope.changeEdit = function (id) {
         $scope.showOrEdit = false;

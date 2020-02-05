@@ -28,7 +28,7 @@ public class AssociationController {
     private AssociationService associationService;
 
     /**
-     * 增加
+     * 社团申请
      *
      * @param associationApply
      */
@@ -36,8 +36,10 @@ public class AssociationController {
     public Result add(@RequestBody AssociationApply associationApply) {
         try {
             associationService.add(associationApply);
+            //成功返回成功数据
             return new Result(true, StatusCode.OK, "增加成功");
         } catch (Exception e) {
+            //报错返回失败，打印错误信息
             e.printStackTrace();
             return new Result(false, StatusCode.ERROR, "增加失败");
         }

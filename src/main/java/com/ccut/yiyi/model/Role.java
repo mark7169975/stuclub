@@ -19,11 +19,14 @@ public class Role implements Serializable {
     @Id
     @Column(name="role_id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer roleId;//
+    private Integer roleId;//角色id
 
     @Column(name="role_name")
     private String roleName;//角色名称
 
     @Column(name="role_code")
     private Integer roleCode;//角色编号
+
+    @Column(name="role_power")
+    private String rolePower;//角色权限
 }

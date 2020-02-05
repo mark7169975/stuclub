@@ -21,7 +21,7 @@ public class Student {
     @Id
     @Column(name="stu_id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer stuId;//
+    private Integer stuId;//学生id
 
 
     @Column(name="stu_name")
@@ -37,7 +37,7 @@ public class Student {
     private Integer stuSex;//性别：0女 1男
 
     @Column(name="stu_email")
-    private String stuEmail;//邮件
+    private String stuEmail;//QQ邮件
 
     @Column(name="stu_tel")
     private String stuTel;//电话
@@ -55,17 +55,12 @@ public class Student {
     private String stuAvatar;//头像
 
     @Column(name="stu_pwd")
-    private String stuPwd;//密码
+    private String stuPwd;//密码 默认密码为学号
 
     @Column(name="stu_description")
     private String stuDescription;//个人简介
 
     @Column(name="created_time")
-    private Date createdTime;//
+    private Date createdTime;//创建时间
 
-    @Column(name="association_id")
-    private Integer associationId;//社团id
-
-    @Column(name="role_code")
-    private Integer roleCode;//角色编号
 }

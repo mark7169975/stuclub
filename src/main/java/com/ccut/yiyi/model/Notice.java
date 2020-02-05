@@ -20,7 +20,7 @@ public class Notice implements Serializable {
     @Id
     @Column(name = "not_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer notId;//
+    private Integer notId;//公告id
 
     @Column(name = "not_title")
     private String notTitle;//公告标题
@@ -33,4 +33,7 @@ public class Notice implements Serializable {
 
     @Column(name = "create_time")
     private Date createTime;//创建时间
+
+    @Column(name = "ass_id")
+    private Integer assId;//公告所属社团
 }

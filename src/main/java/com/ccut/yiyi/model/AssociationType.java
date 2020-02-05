@@ -21,7 +21,7 @@ public class AssociationType implements Serializable {
     @Id
     @Column(name="type_id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer typeId;//
+    private Integer typeId;//社团类型id
 
 
     @Column(name="type_name")

@@ -7,9 +7,5 @@ spring:
       username: root
       password: root
   # \u9759\u6001\u8D44\u6E90\u914D\u7F6E
-  mvc:
-    static-path-pattern: /static/**
-  resources:
-    static-locations: classpath:/static/
 server:
   port: 8888

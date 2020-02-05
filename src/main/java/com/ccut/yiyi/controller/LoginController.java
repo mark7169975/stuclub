@@ -2,7 +2,6 @@ package com.ccut.yiyi.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @ClassName: LoginController
@@ -15,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 
 public class LoginController {
-    @RequestMapping("/login")
+   /* @RequestMapping("/login")
     public String userLogin() {
-        return "login";
-    }
+        System.out.println("1111111111111111");
+        return "/login1.html";
+    }*/
 
     @PostMapping("/login/form")
     public String loginForm() {

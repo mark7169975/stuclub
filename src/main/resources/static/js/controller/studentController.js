@@ -57,12 +57,13 @@ app.controller('studentController', function ($scope, $controller, studentServic
             }
         );
     }
-    //监视typeCode的改变查询社团
+    //监视typeCode的改变查询社团类型下的所有社团
     $scope.$watch('typeCode', function (newValue, oldValue) {
         //调用associationService的方法
         associationService.findByTypeCode(newValue == null ? 1000 : newValue).success(
             function (response) {
                 $scope.AssList = response;
+                $scope.entity.stuRole.assoId = $scope.AssList[0].assId;
             }
         );
     });

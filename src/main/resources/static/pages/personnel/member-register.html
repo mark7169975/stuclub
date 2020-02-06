@@ -184,6 +184,8 @@
                                             ng-options="t.typeCode as t.typeName for t in typeList">
                                     </select>
                                     <select class="select2 form-control" ng-model="entity.stuRole.assoId"
+
+                                            ng-init="entity.stuRole.assoId"
                                             ng-options="x.assId as x.assName for x in AssList">
                                     </select>
                                     {{entity}}

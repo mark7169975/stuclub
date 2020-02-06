@@ -12,4 +12,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @version: V1.0
  */
 public interface StuRoleDao extends JpaRepository<StuRole,Integer>,JpaSpecificationExecutor<StuRole> {
+    void deleteByAssoId(Integer id);
 }

@@ -26,6 +26,10 @@ public class TypeServiceImpl implements TypeService {
     @Autowired
     private AssociationDao associationDao;
 
+    /**
+     * 查询社团所有类型的service实现
+     * @return
+     */
     @Override
     public List<AssociationType> findAll() {
         return typeDao.findAll();

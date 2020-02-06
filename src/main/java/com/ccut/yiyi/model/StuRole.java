@@ -28,7 +28,7 @@ public class StuRole implements Serializable {
     private String stuCode;//学号
 
     @Column(name="role_code")
-    private Integer roleCode;//社团id
+    private Integer roleCode;//角色权限编号
 
     @Column(name="asso_id")
     private Integer assoId;//社团id

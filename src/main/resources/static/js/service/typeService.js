@@ -1,7 +1,7 @@
 //服务层
 app.service('typeService',function($http){
 	    	
-	//读取列表数据绑定到表单中
+	//查询社团的所有类型属性
 	this.findAll=function(){
 		return $http.get('/type/findAll');
 	};

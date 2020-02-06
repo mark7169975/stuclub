@@ -1,38 +1,38 @@
- //控制层 
-app.controller('studentController' ,function($scope,$controller   ,studentService,roleService,typeService,associationService){
-	
-	$controller('baseController',{$scope:$scope});//继承
-	
+//控制层
+app.controller('studentController', function ($scope, $controller, studentService, roleService, typeService, associationService) {
+
+    $controller('baseController', {$scope: $scope});//继承
+
     //读取列表数据绑定到表单中  
-	$scope.findAll=function(){
-		studentService.findAll().success(
-			function(response){
-				$scope.list=response;
-			}			
-		);
-	}    
-	
-	//分页
-	$scope.findPage=function(page,rows){			
-		studentService.findPage(page,rows).success(
-			function(response){
-				$scope.list=response.rows;	
-				$scope.paginationConf.totalItems=response.total;//更新总记录数
-			}			
-		);
-	}
+    $scope.findAll = function () {
+        studentService.findAll().success(
+            function (response) {
+                $scope.list = response;
+            }
+        );
+    }
+
+    //分页
+    $scope.findPage = function (page, rows) {
+        studentService.findPage(page, rows).success(
+            function (response) {
+                $scope.list = response.rows;
+                $scope.paginationConf.totalItems = response.total;//更新总记录数
+            }
+        );
+    }
     //true为只读
     $scope.showOrEdit = true;
-	//查询实体 
-	$scope.findOne=function(id){
+    //查询实体
+    $scope.findOne = function (id) {
         $scope.showOrEdit = true;
-		studentService.findOne(id).success(
-			function(response){
-				$scope.entity= response;					
-			}
-		);				
-	}
-	//修改状态
+        studentService.findOne(id).success(
+            function (response) {
+                $scope.entity = response;
+            }
+        );
+    }
+    //修改状态
     $scope.changeEdit = function (id) {
         $scope.showOrEdit = false;
         studentService.findOne(id).success(
@@ -41,15 +41,15 @@ app.controller('studentController' ,function($scope,$controller   ,studentServic
             }
         );
     }
-	//查询所有角色
-    $scope.findAllRole=function(){
+    //查询所有角色
+    $scope.findAllRole = function () {
         roleService.findAll().success(
-            function(response){
-                $scope.roleList=response;
+            function (response) {
+                $scope.roleList = response;
             }
         );
     };
-	//查询所有社团类型
+    //查询所有社团类型
     $scope.findAllType = function () {
         typeService.findAll().success(
             function (response) {
@@ -58,58 +58,52 @@ app.controller('studentController' ,function($scope,$controller   ,studentServic
         );
     }
     //监视typeCode的改变查询社团
-	$scope.$watch('typeCode',function (newValue, oldValue) {
-        associationService.findByTypeCode(newValue==null?1:newValue).success(
-        	function (response) {
-				$scope.AssList=response;
+    $scope.$watch('typeCode', function (newValue, oldValue) {
+        //调用associationService的方法
+        associationService.findByTypeCode(newValue == null ? 1000 : newValue).success(
+            function (response) {
+                $scope.AssList = response;
             }
-		);
-    })
-    //保存
-	$scope.save=function(){				
-		var serviceObject;//服务层对象  				
-		if($scope.entity.id!=null){//如果有ID
-			serviceObject=studentService.update( $scope.entity ); //修改  
-		}else{
-			serviceObject=studentService.add( $scope.entity  );//增加 
-		}				
-		serviceObject.success(
-			function(response){
-				if(response.success){
+        );
+    });
+    //添加社团成员
+    $scope.save = function () {
+        studentService.add($scope.entity).success(
+            function (response) {
+                if (response.success) {
                     alert(response.message);
-					//重新查询
-					$scope.entity={}
-				}else{
-					alert(response.message);
-				}
-			}		
-		);				
-	}
-	
-	 
-	//批量删除 
-	$scope.dele=function(id){
-		//获取选中的复选框			
-		studentService.dele(id).success(
-			function(response){
-				if(response.success){
-					alert(response.message)
-					$scope.reloadList();//刷新列表
-				}
-			}		
-		);				
-	}
-	
-	$scope.searchEntity={};//定义搜索对象 
-	
-	//搜索
-	$scope.search=function(page,rows){			
-		studentService.search(page,rows,$scope.searchEntity).success(
-			function(response){
-				$scope.list=response.data.rows;
-				$scope.paginationConf.totalItems=response.data.total;//更新总记录数
-			}			
-		);
-	}
-    
+                    $scope.entity = {}
+                } else {
+                    alert(response.message);
+                }
+            }
+        );
+    };
+
+
+    //批量删除
+    $scope.dele = function (id) {
+        //获取选中的复选框
+        studentService.dele(id).success(
+            function (response) {
+                if (response.success) {
+                    alert(response.message)
+                    $scope.reloadList();//刷新列表
+                }
+            }
+        );
+    }
+
+    $scope.searchEntity = {};//定义搜索对象
+
+    //搜索
+    $scope.search = function (page, rows) {
+        studentService.search(page, rows, $scope.searchEntity).success(
+            function (response) {
+                $scope.list = response.data.rows;
+                $scope.paginationConf.totalItems = response.data.total;//更新总记录数
+            }
+        );
+    }
+
 });

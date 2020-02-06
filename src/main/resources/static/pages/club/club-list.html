@@ -39,6 +39,8 @@
     <link rel="stylesheet" href="../../plugins/ionslider/ion.rangeSlider.css">
     <link rel="stylesheet" href="../../plugins/ionslider/ion.rangeSlider.skinNice.css">
     <link rel="stylesheet" href="../../plugins/bootstrap-slider/slider.css">
+    <script src="../../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../../plugins/jQueryUI/jquery-ui.min.js"></script>
 
 
     <!--分割线-->
@@ -81,14 +83,18 @@
                 <div class="pull-left">
                     <div class="form-group form-inline">
                         <div class="btn-group">
-
                         </div>
                     </div>
                 </div>
                 <div class="box-tools pull-right">
-                    <div class="has-feedback">
-                        <input type="text" class="form-control input-sm" placeholder="搜索">
-                        <span class="glyphicon glyphicon-search form-control-feedback"></span>
+
+                    <div class="input-group input-group-sm" style="width: 200px;">
+                        <input type="text" name="table_search" class="form-control pull-right"
+                               ng-model="searchEntity.search" placeholder="社团名称"/>
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-default" ng-click="reloadList()"><i
+                                    class="fa fa-search"></i></button>
+                        </div>
                     </div>
                 </div>
                 <!--工具栏/-->
@@ -117,7 +123,9 @@
                             <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
                                     data-target="#editModal" ng-click="changeEdit(entity.association.assId)">编辑
                             </button>
-                            <button type="button" class="btn bg-olive btn-xs" ng-click="dele(entity.association.assId)">删除</button>
+                            <button type="button" class="btn bg-olive btn-xs" ng-click="dele(entity.association.assId,entity.association.stuCode)">
+                                删除
+                            </button>
                         </td>
                     </tr>
 
@@ -186,7 +194,8 @@
                         </div>
                         <div class="col-md-8">
                             <span ng-if=showOrEdit>
-                                 <input type="text" name="stuName" ng-model="entity.associationType.typeName" ng-readonly=showOrEdit
+                                 <input type="text" name="stuName" ng-model="entity.associationType.typeName"
+                                        ng-readonly=showOrEdit
                                         class="form-control"/>
                             </span>
                             <span ng-if=!showOrEdit>
@@ -223,7 +232,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
                 <span ng-if=!showOrEdit>
-                    <button type="button" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" ng-click="update(entity)" data-dismiss="modal">
                         提交更改
                     </button>
                 </span>
@@ -235,8 +244,6 @@
 </div>
 
 
-<script src="../../plugins/jQuery/jquery-2.2.3.min.js"></script>
-<script src="../../plugins/jQueryUI/jquery-ui.min.js"></script>
 <script>
     $.widget.bridge('uibutton', $.ui.button);
 </script>

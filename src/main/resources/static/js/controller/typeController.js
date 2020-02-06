@@ -3,14 +3,14 @@ app.controller('typeController', function ($scope, $controller, typeService) {
 
     $controller('baseController', {$scope: $scope});//继承
 
-    //读取列表数据绑定到表单中
+    //查询所有社团类型属性信息
     $scope.findAllType = function () {
         typeService.findAll().success(
             function (response) {
                 $scope.typeList = response;
             }
         );
-    }
+    };
 
     //分页
     $scope.findPage = function (page, rows) {

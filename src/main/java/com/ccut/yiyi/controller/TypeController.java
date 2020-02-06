@@ -24,15 +24,13 @@ public class TypeController {
     private TypeService typeService;
 
     /**
-     * 查询全部数据
-     *
+     * 查询社团所有类型全部数据
      * @return
      */
     @GetMapping("findAll")
     public List<AssociationType> findAll() {
         return typeService.findAll();
     }
-
     /**
      * 查询全部社团Group
      *

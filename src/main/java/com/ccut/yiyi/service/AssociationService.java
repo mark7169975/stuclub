@@ -24,8 +24,8 @@ public interface AssociationService {
     void add(AssociationApply associationApply);
 
     /**
+     * 社团条件查询接口 默认查询条件为null
      * 条件查询+分页
-     *
      * @param whereMap
      * @param page
      * @param size
@@ -34,17 +34,28 @@ public interface AssociationService {
     Page<AssociationGroup> findSearch(Map whereMap, int page, int size);
 
     /**
-     * //获取页数
-     *
+     * 通过社团类型typeCode查询其下所有社团
+     * @param code
      * @return
      */
-
-    Long getTotle();
-
-    //通过code查询社团
     List<Association> findAssByCode(Integer code);
 
+    /**
+     * 根据社团id查询一个的接口
+     * @param id
+     * @return
+     */
     AssociationGroup findOne(Integer id);
 
-    void deleteById(Integer id);
+    /**
+     * 删除社团信息
+     * @param id
+     */
+    void deleteById(Integer id,String stuCode);
+
+    /**
+     * 修改社团信息
+     * @param associationGroup
+     */
+    void update(AssociationGroup associationGroup);
 }

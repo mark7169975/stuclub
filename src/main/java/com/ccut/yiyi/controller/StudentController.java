@@ -3,8 +3,8 @@ package com.ccut.yiyi.controller;
 import com.ccut.yiyi.common.PageResult;
 import com.ccut.yiyi.common.Result;
 import com.ccut.yiyi.common.StatusCode;
-import com.ccut.yiyi.model.Student;
 import com.ccut.yiyi.model.group.AssociationGroup;
+import com.ccut.yiyi.model.group.StudentGroup;
 import com.ccut.yiyi.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,14 +41,14 @@ public class StudentController {
     }
 
     /**
-     * 增加
+     * 增加社团学生信息
      *
-     * @param student
+     * @param studentGroup
      */
     @PostMapping("add")
-    public Result add(@RequestBody Student student) {
+    public Result add(@RequestBody StudentGroup studentGroup) {
         try {
-            studentService.add(student);
+            studentService.add(studentGroup);
             return new Result(true, StatusCode.OK, "增加成功");
         } catch (Exception e) {
             e.printStackTrace();

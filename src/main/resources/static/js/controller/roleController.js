@@ -3,14 +3,14 @@ app.controller('roleController' ,function($scope,$controller   ,roleService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
-    //读取列表数据绑定到表单中  
+    //查询所有角色信息
 	$scope.findAll=function(){
 		roleService.findAll().success(
 			function(response){
 				$scope.list=response;
 			}			
 		);
-	}    
+	};
 	
 	//分页
 	$scope.findPage=function(page,rows){			

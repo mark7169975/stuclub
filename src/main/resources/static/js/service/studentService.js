@@ -13,10 +13,10 @@ app.service('studentService',function($http){
 	this.findOne=function(id){
 		return $http.get('/student/findOne/'+id);
 	}
-	//增加
+	//增加社团成员
 	this.add=function(entity){
 		return  $http.post('/student/add',entity );
-	}
+	};
 	//修改
 	this.update=function(entity){
 		return  $http.post('../student/update.do',entity );

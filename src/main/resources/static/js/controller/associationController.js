@@ -31,15 +31,16 @@ app.controller('associationController', function ($scope, $controller, associati
             }
         );
     }
-    //查询实体
+    //查询一个社团详情
     $scope.findOne = function (id) {
+        //查看社团详情时，showOrEdit为true是只读
         $scope.showOrEdit = true;
         associationService.findOne(id).success(
             function (response) {
                 $scope.entity = response;
             }
         );
-    }
+    };
     //true为只读
     $scope.showOrEdit = true;
     //社团申请提交数据
@@ -58,47 +59,60 @@ app.controller('associationController', function ($scope, $controller, associati
             }
         );
     };
-    //修改状态
+    //修改社团前查询一个社团信息
     $scope.changeEdit = function (id) {
+        //把修改权限修改为false表示可以修改
         $scope.showOrEdit = false;
         associationService.findOne(id).success(
             function (response) {
                 $scope.entity = response;
             }
         );
+        //查询社团的所有类型
         typeService.findAll().success(
             function (response) {
                 $scope.typeList = response;
             }
         );
 
-    }
+    };
     //修改社团信息
     $scope.update = function (entity) {
         associationService.update(entity).success(
             function (response) {
                 if (response.success) {
-                    $scope.entity = response;
+                    alert(response.message);
+                    $scope.reloadList();//重新加载页面
+                } else {
+                    alert(response.message);
                 }
             }
         );
-    }
+    };
 
-    //删除
-    $scope.dele = function (id) {
-        //获取选中的复选框
-        associationService.dele(id).success(
-            function (response) {
-                if (response.success) {
-                    $scope.reloadList();//刷新列表
+    //删除社团信息
+    $scope.dele = function (id, stuCode) {
+        if(confirm("确认删除吗?") === true){
+            if(confirm("再次确认删除吗?") === true) {
+                if(confirm("最终确定删除吗?") === true) {
+                    associationService.dele(id, stuCode).success(
+                        function (response) {
+                            if (response.success) {
+                                alert(response.message);
+                                $scope.reloadList();//刷新列表
+                            } else {
+                                alert(response.message)
+                            }
+                        }
+                    );
                 }
             }
-        );
-    }
+        }
+    };
 
     $scope.searchEntity = {};//定义搜索对象
 
-    //搜索
+    //查询所有社团，默认搜索数据为null
     $scope.search = function (page, rows) {
         associationService.search(page, rows, $scope.searchEntity).success(
             function (response) {
@@ -106,6 +120,6 @@ app.controller('associationController', function ($scope, $controller, associati
                 $scope.paginationConf.totalItems = response.data.total;//更新总记录数
             }
         );
-    }
+    };
 
 });	

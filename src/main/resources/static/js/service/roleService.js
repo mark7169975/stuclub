@@ -1,10 +1,10 @@
 //服务层
 app.service('roleService',function($http){
 	    	
-	//读取列表数据绑定到表单中
+	//查询所有角色信息
 	this.findAll=function(){
 		return $http.get('/role/findAll');
-	}
+	};
 	//分页 
 	this.findPage=function(page,rows){
 		return $http.get('../role/findPage.do?page='+page+'&rows='+rows);

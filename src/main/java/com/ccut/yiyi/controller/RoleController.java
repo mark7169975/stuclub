@@ -23,7 +23,7 @@ public class RoleController {
     private RoleService roleService;
 
     /**
-     * 查询全部数据
+     * 查询所有角色信息
      *
      * @return
      */

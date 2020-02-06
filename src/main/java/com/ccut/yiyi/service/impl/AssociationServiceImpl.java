@@ -12,10 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +40,7 @@ public class AssociationServiceImpl implements AssociationService {
     private StuRoleDao stuRoleDao;
 
     /**
-     * @param associationApply
-     * 申请社团的service实现
+     * @param associationApply 申请社团的service实现
      */
     @Override
     public void add(AssociationApply associationApply) {
@@ -85,8 +81,14 @@ public class AssociationServiceImpl implements AssociationService {
         stuRoleDao.save(stuRole);
     }
 
-    Long total = 0L;
-
+    /**
+     * 社团查询全部，默认查询条件为null，当条件为null时查询所有社团
+     *
+     * @param whereMap
+     * @param page
+     * @param size
+     * @return
+     */
     @Override
     public Page<AssociationGroup> findSearch(Map whereMap, int page, int size) {
         Specification<Association> specification = createSpecification(whereMap);
@@ -100,16 +102,21 @@ public class AssociationServiceImpl implements AssociationService {
         });
     }
 
-    @Override
-    public Long getTotle() {
-        return total;
-    }
-
+    /**
+     * 通过社团类型的typeCode查询其下所有社团
+     * @param code
+     * @return
+     */
     @Override
     public List<Association> findAssByCode(Integer code) {
         return associationDao.findByTypeCode(code);
     }
 
+    /**
+     * 根据社团id查询一个社团的service实现
+     * @param id
+     * @return
+     */
     @Override
     public AssociationGroup findOne(Integer id) {
 
@@ -117,7 +124,9 @@ public class AssociationServiceImpl implements AssociationService {
         //判断是否为空
         if (byId.isPresent()) {
             Association association = byId.get();
+            //查询社长的学生信息
             Student student = studentDao.findByStuCode(association.getStuCode());
+            //查询社团所属类型
             AssociationType type = associationTypeDao.findByTypeCode(association.getTypeCode());
             AssociationGroup associationGroup = new AssociationGroup();
             associationGroup.setStudent(student);
@@ -125,12 +134,38 @@ public class AssociationServiceImpl implements AssociationService {
             associationGroup.setAssociationType(type);
             return associationGroup;
         }
+        //如果查询失败返回null
         return null;
     }
 
+    /**
+     * 删除社团信息的service实现
+     * @param id
+     */
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id,String stuCode) {
+        //删除社团信息
         associationDao.deleteById(id);
+        //删除学生社团关联信息
+        stuAssoDao.deleteByAssId(id);
+        //删除学生和角色关联信息
+        stuRoleDao.deleteByAssoId(id);
+        //判断学生是否加入别的社团，如果没有加入别的社团则删除学生信息
+        if(stuAssoDao.findBystuCode(stuCode).isEmpty()){
+            studentDao.deleteByStuCode(stuCode);
+        }
+    }
+    /**
+     * 修改社团信息
+     *
+     * @param associationGroup
+     */
+    @Override
+    public void update(AssociationGroup associationGroup) {
+        //更新数据
+        associationGroup.getAssociation().setTypeCode(associationGroup.getAssociationType().getTypeCode());
+        associationDao.save(associationGroup.getAssociation());
+        studentDao.save(associationGroup.getStudent());
     }
 
     /**
@@ -141,34 +176,15 @@ public class AssociationServiceImpl implements AssociationService {
      */
     private Specification<Association> createSpecification(Map searchMap) {
 
-        return new Specification<Association>() {
-
-            @Override
-            public Predicate toPredicate(Root<Association> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                List<Predicate> predicateList = new ArrayList<Predicate>();
-                // 社团名称
-                if (searchMap.get("ass_name") != null && !"".equals(searchMap.get("ass_name"))) {
-                    predicateList.add(cb.like(root.get("ass_name").as(String.class), "%" + (String) searchMap.get
-                            ("ass_name") + "%"));
-                }
-                // 社长学号
-                if (searchMap.get("stu_code") != null && !"".equals(searchMap.get("stu_code"))) {
-                    predicateList.add(cb.like(root.get("stu_code").as(String.class), "%" + (String) searchMap.get
-                            ("stu_code") + "%"));
-                }
-                // 社团徽章
-                if (searchMap.get("ass_avatar") != null && !"".equals(searchMap.get("ass_avatar"))) {
-                    predicateList.add(cb.like(root.get("ass_avatar").as(String.class), "%" + (String) searchMap.get
-                            ("ass_avatar") + "%"));
-                }
-                // 社团描述
-                if (searchMap.get("ass_description") != null && !"".equals(searchMap.get("ass_description"))) {
-                    predicateList.add(cb.like(root.get("ass_description").as(String.class), "%" + (String) searchMap
-                            .get("ass_description") + "%"));
-                }
-                return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
-
+        return (root, query, cb) -> {
+            List<Predicate> predicateList = new ArrayList<Predicate>();
+            // 社团名称
+            if (searchMap.get("search") != null && !"".equals(searchMap.get("search"))) {
+                predicateList.add(cb.like(root.get("assName").as(String.class), "%" + (String) searchMap.get
+                        ("search") + "%"));
             }
+            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
+
         };
 
     }

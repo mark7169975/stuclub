@@ -19,6 +19,11 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleDao roleDao;
+
+    /**
+     * 查询所有角色信息的实现
+     * @return
+     */
     @Override
     public List<Role> findAll() {
         return roleDao.findAll();

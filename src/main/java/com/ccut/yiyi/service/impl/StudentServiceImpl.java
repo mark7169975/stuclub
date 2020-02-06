@@ -1,15 +1,20 @@
 package com.ccut.yiyi.service.impl;
 
 import com.ccut.yiyi.dao.AssociationDao;
+import com.ccut.yiyi.dao.StuAssoDao;
+import com.ccut.yiyi.dao.StuRoleDao;
 import com.ccut.yiyi.dao.StudentDao;
+import com.ccut.yiyi.model.StuAsso;
 import com.ccut.yiyi.model.Student;
 import com.ccut.yiyi.model.group.AssociationGroup;
+import com.ccut.yiyi.model.group.StudentGroup;
 import com.ccut.yiyi.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -28,11 +33,16 @@ import java.util.Optional;
  * @version: V1.0
  */
 @Service
+@Transactional
 public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudentDao studentDao;
     @Autowired
     private AssociationDao associationDao;
+    @Autowired
+    private StuRoleDao stuRoleDao;
+    @Autowired
+    private StuAssoDao stuAssoDao;
 
     /**
      * 条件查询+分页
@@ -50,22 +60,44 @@ public class StudentServiceImpl implements StudentService {
         return studentDao.findAll(specification, pageRequest).map(s -> {
             AssociationGroup associationGroup = new AssociationGroup();
             associationGroup.setStudent(s);
-          //  Optional<Association> associationDaoById = associationDao.findById(s.getAssociationId());
-          //  associationDaoById.ifPresent(associationGroup::setAssociation);
+            //  Optional<Association> associationDaoById = associationDao.findById(s.getAssociationId());
+            //  associationDaoById.ifPresent(associationGroup::setAssociation);
             return associationGroup;
         });
     }
 
+    /**
+     * 添加社员的service实现
+     * @param studentGroup
+     */
     @Override
-    public void add(Student student) {
-        student.setStuPwd(student.getStuCode());
-        studentDao.save(student);
+    public void add(StudentGroup studentGroup) {
+
+        //设置默认密码为学号
+        studentGroup.getStudent().setStuPwd(studentGroup.getStudent().getStuCode());
+        //设置学生角色关联表对应学号
+        studentGroup.getStuRole().setStuCode(studentGroup.getStudent().getStuCode());
+        //添加学生角色关联表到数据库
+        stuRoleDao.save(studentGroup.getStuRole());
+        //给学生，社团关联表设置值
+        StuAsso stuAsso = new StuAsso();
+        stuAsso.setAssId(studentGroup.getStuRole().getAssoId());
+        stuAsso.setStuCode(studentGroup.getStuRole().getStuCode());
+        //添加学生，社团关联表到数据库
+        stuAssoDao.save(stuAsso);
+        //查询学生是否加入过其他社团
+        Student byStuCode = studentDao.findByStuCode(studentGroup.getStudent().getStuCode());
+        //如果能查询出学生信息证明此学生已经加入别的社团
+        if (byStuCode == null) {
+            //添加学生数据
+            studentDao.save(studentGroup.getStudent());
+        }
     }
 
     @Override
     public AssociationGroup findById(Integer id) {
         Optional<Student> byId = studentDao.findById(id);
-        if(byId.isPresent()){
+        if (byId.isPresent()) {
             Student student = byId.get();
             AssociationGroup associationGroup = new AssociationGroup();
             associationGroup.setStudent(student);
@@ -78,7 +110,7 @@ public class StudentServiceImpl implements StudentService {
             }*/
 
         }
-return null;
+        return null;
     }
 
     @Override

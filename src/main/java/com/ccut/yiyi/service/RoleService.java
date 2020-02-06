@@ -12,5 +12,9 @@ import java.util.List;
  * @version: V1.0
  */
 public interface RoleService {
+    /**
+     * 查询所有角色信息
+     * @return
+     */
     List<Role> findAll();
 }

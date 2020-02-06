@@ -13,6 +13,10 @@ import java.util.List;
  * @version: V1.0
  */
 public interface TypeService {
+    /**
+     * 查询社团所有类型
+     * @return
+     */
     List<AssociationType> findAll();
 
     List<TypeGroup> findAllTypeGroup();

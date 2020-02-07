@@ -15,14 +15,15 @@ import java.util.Map;
  */
 public interface StudentService {
     /**
+     * 查询选中社团所有学生信息
      * 条件查询+分页
-     *
      * @param whereMap
      * @param page
      * @param size
+     * @param assoId
      * @return
      */
-    Page<AssociationGroup> findSearch(Map whereMap, int page, int size);
+    Page<StudentGroup> findSearch(Map whereMap, int page, int size,Integer assoId);
 
     /**
      * 添加社团成员

@@ -26,6 +26,7 @@ public class StudentController {
     private StudentService studentService;
 
     /**
+     * 查询选中社团所有学生信息
      * 分页+多条件查询
      *
      * @param searchMap 查询条件封装
@@ -33,11 +34,18 @@ public class StudentController {
      * @param rows      页大小
      * @return 分页结果
      */
-    @PostMapping("/search/{page}/{rows}")
-    public Result findSearch(@RequestBody Map searchMap, @PathVariable int page, @PathVariable int rows) {
-        Page<AssociationGroup> pageList = studentService.findSearch(searchMap, page, rows);
-        return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(pageList.getTotalElements(), pageList
-                .getContent()));
+    @PostMapping("/search/{page}/{rows}/{assoId}")
+    public Result findSearch(@RequestBody Map searchMap, @PathVariable int page, @PathVariable int rows,
+                             @PathVariable Integer assoId) {
+        try {
+            Page<StudentGroup> pageList = studentService.findSearch(searchMap, page, rows, assoId);
+            return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(pageList.getTotalElements(), pageList
+                    .getContent()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, StatusCode.ERROR, "查询失败");
+        }
+
     }
 
     /**
@@ -58,32 +66,34 @@ public class StudentController {
 
     /**
      * 根据ID查询
+     *
      * @param id ID
      * @return
      */
     @GetMapping("findOne/{id}")
-    public AssociationGroup findOne(@PathVariable Integer id){
+    public AssociationGroup findOne(@PathVariable Integer id) {
         try {
-            return studentService.findById(id) ;
+            return studentService.findById(id);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
     /**
      * 删除
+     *
      * @param id
      */
     @DeleteMapping("delete/{id}")
-    public Result delete(@PathVariable Integer id ){
+    public Result delete(@PathVariable Integer id) {
         try {
             studentService.deleteById(id);
-            return new Result(true,StatusCode.OK,"删除成功");
+            return new Result(true, StatusCode.OK, "删除成功");
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false, StatusCode.ERROR, "删除失败");
         }
-
 
     }
 }

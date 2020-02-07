@@ -25,8 +25,8 @@ app.service('studentService',function($http){
 	this.dele=function(id){
 		return $http.delete('/student/delete/'+id);
 	}
-	//搜索
-	this.search=function(page,rows,searchEntity){
-		return $http.post('/student/search/'+page+"/"+rows, searchEntity);
+	//查询此社团所有学生信息
+	this.search=function(page,rows,assoId,searchEntity){
+		return $http.post('/student/search/'+page+"/"+rows+"/"+assoId, searchEntity);
 	}
 });

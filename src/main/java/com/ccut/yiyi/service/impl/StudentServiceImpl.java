@@ -5,10 +5,12 @@ import com.ccut.yiyi.dao.StuAssoDao;
 import com.ccut.yiyi.dao.StuRoleDao;
 import com.ccut.yiyi.dao.StudentDao;
 import com.ccut.yiyi.model.StuAsso;
+import com.ccut.yiyi.model.StuRole;
 import com.ccut.yiyi.model.Student;
 import com.ccut.yiyi.model.group.AssociationGroup;
 import com.ccut.yiyi.model.group.StudentGroup;
 import com.ccut.yiyi.service.StudentService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,29 +47,31 @@ public class StudentServiceImpl implements StudentService {
     private StuAssoDao stuAssoDao;
 
     /**
+     * 查询选中社团所有学生信息的实现
      * 条件查询+分页
-     *
      * @param whereMap
      * @param page
      * @param size
      * @return
      */
     @Override
-    public Page<AssociationGroup> findSearch(Map whereMap, int page, int size) {
-        Specification<Student> specification = createSpecification(whereMap);
+    public Page<StudentGroup> findSearch(Map whereMap, int page, int size,Integer assoId) {
+        Specification<StuRole> specification = createSpecification(whereMap,assoId);
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        //把student分页数据转换成组合类分页数据
-        return studentDao.findAll(specification, pageRequest).map(s -> {
-            AssociationGroup associationGroup = new AssociationGroup();
-            associationGroup.setStudent(s);
-            //  Optional<Association> associationDaoById = associationDao.findById(s.getAssociationId());
-            //  associationDaoById.ifPresent(associationGroup::setAssociation);
-            return associationGroup;
+        //把学生和社团中间表查询的数据转换为学生社团表的组合类StudentGroup
+        return stuRoleDao.findAll(specification, pageRequest).map(s -> {
+            StudentGroup studentGroup = new StudentGroup();
+            //设置学生信息
+            studentGroup.setStudent(studentDao.findByStuCode(s.getStuCode()));
+            //设置中间表信息
+            studentGroup.setStuRole(s);
+            return studentGroup;
         });
     }
 
     /**
      * 添加社员的service实现
+     *
      * @param studentGroup
      */
     @Override
@@ -124,64 +128,27 @@ public class StudentServiceImpl implements StudentService {
      * @param searchMap
      * @return
      */
-    private Specification<Student> createSpecification(Map searchMap) {
+    private Specification<StuRole> createSpecification(Map searchMap,Integer assoId) {
 
-        return new Specification<Student>() {
+        return new Specification<StuRole>() {
 
             @Override
-            public Predicate toPredicate(Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<StuRole> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicateList = new ArrayList<Predicate>();
-                // 学生姓名
-                if (searchMap.get("stu_name") != null && !"".equals(searchMap.get("stu_name"))) {
-                    predicateList.add(cb.like(root.get("stu_name").as(String.class), "%" + (String) searchMap.get
-                            ("stu_name") + "%"));
-                }
-                // 学号
-                if (searchMap.get("stu_code") != null && !"".equals(searchMap.get("stu_code"))) {
-                    predicateList.add(cb.like(root.get("stu_code").as(String.class), "%" + (String) searchMap.get
-                            ("stu_code") + "%"));
-                }
-                // 邮件
-                if (searchMap.get("stu_email") != null && !"".equals(searchMap.get("stu_email"))) {
-                    predicateList.add(cb.like(root.get("stu_email").as(String.class), "%" + (String) searchMap
-                            .get("stu_email") + "%"));
-                }
-                // 电话
-                if (searchMap.get("stu_tel") != null && !"".equals(searchMap.get("stu_tel"))) {
-                    predicateList.add(cb.like(root.get("stu_tel").as(String.class), "%" + (String) searchMap.get
-                            ("stu_tel") + "%"));
-                }
-                // QQ
-                if (searchMap.get("stu_qq") != null && !"".equals(searchMap.get("stu_qq"))) {
-                    predicateList.add(cb.like(root.get("stu_qq").as(String.class), "%" + (String) searchMap.get
-                            ("stu_qq") + "%"));
-                }
-                // 学院
-                if (searchMap.get("stu_college") != null && !"".equals(searchMap.get("stu_college"))) {
-                    predicateList.add(cb.like(root.get("stu_college").as(String.class), "%" + (String) searchMap
-                            .get("stu_college") + "%"));
-                }
-                // 专业
-                if (searchMap.get("stu_major") != null && !"".equals(searchMap.get("stu_major"))) {
-                    predicateList.add(cb.like(root.get("stu_major").as(String.class), "%" + (String) searchMap
-                            .get("stu_major") + "%"));
-                }
-                // 头像
-                if (searchMap.get("stu_avatar") != null && !"".equals(searchMap.get("stu_avatar"))) {
-                    predicateList.add(cb.like(root.get("stu_avatar").as(String.class), "%" + (String) searchMap
-                            .get("stu_avatar") + "%"));
-                }
-                // 密码
-                if (searchMap.get("stu_pwd") != null && !"".equals(searchMap.get("stu_pwd"))) {
-                    predicateList.add(cb.like(root.get("stu_pwd").as(String.class), "%" + (String) searchMap.get
-                            ("stu_pwd") + "%"));
-                }
-                // 个人简介
-                if (searchMap.get("stu_description") != null && !"".equals(searchMap.get("stu_description"))) {
-                    predicateList.add(cb.like(root.get("stu_description").as(String.class), "%" + (String) searchMap
-                            .get("stu_description") + "%"));
-                }
+                //添加查询条件，学生加入社团id为assoId的所有学生
+                predicateList.add(cb.equal(root.get("assoId"), assoId));
 
+                // 添加输出的查询条件
+                if (searchMap.get("search") != null && !"".equals(searchMap.get("search"))) {
+                    //判断是否是数字组成的字符串
+                    if(StringUtils.isNumeric((String)searchMap.get("search"))){
+                        predicateList.add(cb.like(root.get("stuCode").as(String.class), "%" + (String) searchMap.get
+                                ("search") + "%"));
+                    }else {
+                        //通过姓名查询未完成
+                        List<StuRole> byAssoId = stuRoleDao.findByAssoId(assoId);
+                    }
+                }
                 return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
 
             }

@@ -63,7 +63,8 @@
     <script type="text/javascript" src="../../js/controller/associationController.js"></script>
 </head>
 
-<body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="studentController">
+<body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="studentController"
+      ng-init="findAllType()">
 
 <!-- 内容区域 -->
 <!-- @@master = admin-layout.html-->
@@ -75,7 +76,7 @@
 <!-- 正文区域 -->
 <section class="content-header">
     <h1>
-        成员列表
+        成员列表 {{entity}}{{assoId}}
     </h1>
 
 </section>
@@ -90,17 +91,30 @@
             <div class="table-box">
 
                 <!--工具栏-->
-                <div class="pull-left">
+                <div class="box-tools pull-left">
                     <div class="form-group form-inline">
                         <div class="btn-group">
-
+                            <div class="row data-type">
+                                <label class="control-label">社团类型: </label>
+                                <select class="select2 form-control" ng-init="typeCode = 1000" ng-model="typeCode"
+                                        ng-options="t.typeCode as t.typeName for t in typeList">
+                                </select>
+                                <label class="control-label">社团: </label>
+                                <select class="select2 form-control" ng-model="entity.stuRole.assoId"
+                                        ng-options="x.assId as x.assName for x in AssList">
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="box-tools pull-right">
-                    <div class="has-feedback">
-                        <input type="text" class="form-control input-sm" placeholder="搜索">
-                        <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                    <div class="input-group input-group-sm" style="width: 200px;">
+                        <input type="text" name="table_search" class="form-control pull-right"
+                               ng-model="searchEntity.search" placeholder="学号"/>
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-default" ng-click="reloadList()"><i
+                                    class="fa fa-search"></i></button>
+                        </div>
                     </div>
                 </div>
                 <!--工具栏/-->
@@ -115,29 +129,28 @@
                         <th class="">性别</th>
                         <th class="">电话</th>
                         <th class="">QQ</th>
-                        <th class="">学院</th>
-                        <th class="">专业</th>
-                        <th class="sorting_desc sorting_desc_disabled">社团</th>
+                        <th class="">是否为管理人员</th>
                         <th class="text-center">操作</th>
                     </tr>
                     </thead>
                     <tbody>
 
-                    <tr ng-repeat="entity in list">
-                        <td>{{entity.student.stuCode}}</td>
-                        <td>{{entity.student.stuName}}</td>
-                        <td>{{entity.student.stuSex == 0?'女':'男'}}</td>
-                        <td> {{entity.student.stuTel}}</td>
-                        <td> {{entity.student.stuQq}}</td>
-                        <td> {{entity.student.stuCollege}}</td>
-                        <td>{{entity.student.stuMajor}}</td>
-                        <td>{{entity.association.assName}}</td>
+                    <tr ng-repeat="pojo in list">
+                        <td>{{pojo.student.stuCode}}</td>
+                        <td>{{pojo.student.stuName}}</td>
+                        <td>{{pojo.student.stuSex == 0?'女':'男'}}</td>
+                        <td>{{pojo.student.stuTel}}</td>
+                        <td>{{pojo.student.stuQq}}</td>
+                        <td></td>
                         <td class="text-center">
                             <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
-                                    data-target="#editModal" ng-click="findOne(entity.student.stuId)">详情</button>
+                                    data-target="#editModal" ng-click="findOne(pojo.student.stuId)">详情
+                            </button>
                             <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
-                                    data-target="#editModal" ng-click="changeEdit(entity.student.stuId)">编辑</button>
-                            <button type="button" class="btn bg-olive btn-xs" ng-click="dele(entity.student.stuId)">删除</button>
+                                    data-target="#editModal" ng-click="changeEdit(pojo.student.stuId)">编辑
+                            </button>
+                            <button type="button" class="btn bg-olive btn-xs" ng-click="dele(pojo.student.stuId)">删除
+                            </button>
                         </td>
                     </tr>
 
@@ -156,7 +169,6 @@
                 <!--数据列表/-->
                 <!-- 分页 -->
                 <tm-pagination conf="paginationConf"></tm-pagination>
-                {{selectIds}}
                 <!-- 分页 -->
 
             </div>
@@ -193,7 +205,8 @@
                             <label class="control-label">姓名: </label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="studentName" ng-model="entity.student.stuName"  ng-readonly=showOrEdit class="form-control"/>
+                            <input type="text" name="studentName" ng-model="pojo.student.stuName"
+                                   ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -201,24 +214,8 @@
                             <label class="control-label">学号: </label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="studentCode" ng-model="entity.student.stuCode" ng-readonly=showOrEdit class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row margin-bottom">
-                        <div class="col-md-2 text-center">
-                            <label class="control-label">生日: </label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" name="birthday" ng-model="entity.student.stuBirthday" ng-readonly=showOrEdit class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="row margin-bottom">
-                        <div class="col-md-2 text-center">
-                            <label class="control-label">性别: </label>
-                        </div>
-                        <div class="col-md-8" style="padding-top: 7px;">
-                            <input type="radio" name="sex" id="maleRadio" /> 男
-                            <input type="radio" name="sex" id="femaleRadio" /> 女
+                            <input type="text" name="studentCode" ng-model="pojo.student.stuCode"
+                                   ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -226,7 +223,8 @@
                             <label class="control-label">邮件</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="mail" ng-model="entity.student.stuEmail" ng-readonly=showOrEdit class="form-control"/>
+                            <input type="text" name="mail" ng-model="pojo.student.stuEmail" ng-readonly=showOrEdit
+                                   class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -234,7 +232,8 @@
                             <label class="control-label">联系电话</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="phone" ng-model="entity.student.stuTel" ng-readonly=showOrEdit class="form-control"/>
+                            <input type="text" name="phone" ng-model="pojo.student.stuTel" ng-readonly=showOrEdit
+                                   class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -242,7 +241,8 @@
                             <label class="control-label">QQ</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="qq" ng-model="entity.student.stuQq" ng-readonly=showOrEdit class="form-control"/>
+                            <input type="text" name="qq" ng-model="pojo.student.stuQq" ng-readonly=showOrEdit
+                                   class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -250,7 +250,8 @@
                             <label class="control-label">学院</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="college" ng-model="entity.student.stuCollege" ng-readonly=showOrEdit class="form-control"/>
+                            <input type="text" name="college" ng-model="pojo.student.stuCollege"
+                                   ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -258,7 +259,8 @@
                             <Label class="control-label">专业</Label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="major" ng-model="entity.student.stuMajor" ng-readonly=showOrEdit class="form-control"/>
+                            <input type="text" name="major" ng-model="pojo.student.stuMajor" ng-readonly=showOrEdit
+                                   class="form-control"/>
                         </div>
                     </div>
                     <div class="row margin-bottom">
@@ -266,7 +268,8 @@
                             <Label class="control-label">个人简介</Label>
                         </div>
                         <div class="col-md-8">
-                            <textarea cols="80" rows="8" ng-model="entity.student.stuDescription" ng-readonly=showOrEdit class="form-control"></textarea>
+                            <textarea cols="80" rows="3" ng-model="pojo.student.stuDescription" ng-readonly=showOrEdit
+                                      class="form-control"></textarea>
                         </div>
                     </div>
                 </form>

@@ -3,6 +3,7 @@ package com.ccut.yiyi.service;
 import com.ccut.yiyi.model.Association;
 import com.ccut.yiyi.model.group.AssociationApply;
 import com.ccut.yiyi.model.group.AssociationGroup;
+import com.ccut.yiyi.model.group.StudentSimplify;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public interface AssociationService {
     /**
      * 社团条件查询接口 默认查询条件为null
      * 条件查询+分页
+     *
      * @param whereMap
      * @param page
      * @param size
@@ -35,6 +37,7 @@ public interface AssociationService {
 
     /**
      * 通过社团类型typeCode查询其下所有社团
+     *
      * @param code
      * @return
      */
@@ -42,6 +45,7 @@ public interface AssociationService {
 
     /**
      * 根据社团id查询一个的接口
+     *
      * @param id
      * @return
      */
@@ -49,13 +53,31 @@ public interface AssociationService {
 
     /**
      * 删除社团信息
+     *
      * @param id
      */
-    void deleteById(Integer id,String stuCode);
+    void deleteById(Integer id, String stuCode);
 
     /**
      * 修改社团信息
+     *
      * @param associationGroup
      */
     void update(AssociationGroup associationGroup);
+
+    /**
+     * 通过社团id查询此社团下的所有学生
+     *
+     * @param assId 社团id
+     * @return 返回数据
+     */
+    List<StudentSimplify> findOneAss(Integer assId);
+
+    /**
+     * 社团换届的service接口
+     *
+     * @param stuCode 需要换届的学生学号
+     * @param assId   社团id
+     */
+    void changeManage(String stuCode, Integer assId);
 }

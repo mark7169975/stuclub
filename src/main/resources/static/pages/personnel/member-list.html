@@ -124,24 +124,46 @@
                     <thead>
                     <tr>
 
-                        <th class="">学号</th>
-                        <th class="">姓名</th>
-                        <th class="">性别</th>
-                        <th class="">电话</th>
-                        <th class="">QQ</th>
-                        <th class="">是否为管理人员</th>
+                        <th class="text-center">学号</th>
+                        <th class="text-center">姓名</th>
+                        <th class="text-center">性别</th>
+                        <th class="text-center">电话</th>
+                        <th class="text-center">QQ</th>
+                        <th class="text-center">管理修改</th>
                         <th class="text-center">操作</th>
                     </tr>
                     </thead>
                     <tbody>
 
                     <tr ng-repeat="pojo in list">
-                        <td>{{pojo.student.stuCode}}</td>
-                        <td>{{pojo.student.stuName}}</td>
-                        <td>{{pojo.student.stuSex == 0?'女':'男'}}</td>
-                        <td>{{pojo.student.stuTel}}</td>
-                        <td>{{pojo.student.stuQq}}</td>
-                        <td></td>
+                        <td class="text-center">{{pojo.student.stuCode}}</td>
+                        <td class="text-center">{{pojo.student.stuName}}</td>
+                        <td class="text-center">{{pojo.student.stuSex == 0?'女':'男'}}</td>
+                        <td class="text-center">{{pojo.student.stuTel}}</td>
+                        <td class="text-center">{{pojo.student.stuQq}}</td>
+                        <td class="text-center">
+                            <span ng-if="pojo.stuRole.roleCode==2000">超级管理员</span>
+                            <span ng-if="pojo.stuRole.roleCode==2001">
+                                <span ng-repeat="p in AssList">
+                                    <span ng-if="p.assId == assoId">
+                                        <span ng-if="p.stuCode == pojo.student.stuCode">
+                                            社团社长
+                                        </span>
+                                        <span ng-if="p.stuCode != pojo.student.stuCode">
+                                            <button type="button" class="btn bg-gray btn-xs color-palette"
+                                                    ng-click="setManage(pojo.student.stuCode,assoId,0)">取消管理
+                                            </button>
+                                        </span>
+                                    </span>
+
+                                </span>
+                            </span>
+                            <span ng-if="pojo.stuRole.roleCode==2002">
+                                <button type="button" class="btn bg-aqua btn-xs color-palette"
+                                        ng-click="setManage(pojo.student.stuCode,assoId,1)">设置管理
+                                </button>
+                            </span>
+                        </td>
                         <td class="text-center">
                             <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
                                     data-target="#editModal" ng-click="findOne(pojo.student.stuId)">详情
@@ -149,7 +171,8 @@
                             <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
                                     data-target="#editModal" ng-click="changeEdit(pojo.student.stuId)">编辑
                             </button>
-                            <button type="button" class="btn bg-olive btn-xs" ng-click="dele(pojo.student.stuId)">删除
+                            <button type="button" class="btn bg-olive btn-xs"
+                                    ng-click="dele(pojo.student.stuId,assoId)">删除
                             </button>
                         </td>
                     </tr>
@@ -205,7 +228,7 @@
                             <label class="control-label">姓名: </label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="studentName" ng-model="pojo.student.stuName"
+                            <input type="text" name="studentName" ng-model="po.stuName"
                                    ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
@@ -214,7 +237,7 @@
                             <label class="control-label">学号: </label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="studentCode" ng-model="pojo.student.stuCode"
+                            <input type="text" name="studentCode" ng-model="po.stuCode"
                                    ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
@@ -223,7 +246,7 @@
                             <label class="control-label">邮件</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="mail" ng-model="pojo.student.stuEmail" ng-readonly=showOrEdit
+                            <input type="text" name="mail" ng-model="po.stuEmail" ng-readonly=showOrEdit
                                    class="form-control"/>
                         </div>
                     </div>
@@ -232,7 +255,7 @@
                             <label class="control-label">联系电话</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="phone" ng-model="pojo.student.stuTel" ng-readonly=showOrEdit
+                            <input type="text" name="phone" ng-model="po.stuTel" ng-readonly=showOrEdit
                                    class="form-control"/>
                         </div>
                     </div>
@@ -241,7 +264,7 @@
                             <label class="control-label">QQ</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="qq" ng-model="pojo.student.stuQq" ng-readonly=showOrEdit
+                            <input type="text" name="qq" ng-model="po.stuQq" ng-readonly=showOrEdit
                                    class="form-control"/>
                         </div>
                     </div>
@@ -250,7 +273,7 @@
                             <label class="control-label">学院</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="college" ng-model="pojo.student.stuCollege"
+                            <input type="text" name="college" ng-model="po.stuCollege"
                                    ng-readonly=showOrEdit class="form-control"/>
                         </div>
                     </div>
@@ -259,7 +282,7 @@
                             <Label class="control-label">专业</Label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" name="major" ng-model="pojo.student.stuMajor" ng-readonly=showOrEdit
+                            <input type="text" name="major" ng-model="po.stuMajor" ng-readonly=showOrEdit
                                    class="form-control"/>
                         </div>
                     </div>
@@ -268,7 +291,7 @@
                             <Label class="control-label">个人简介</Label>
                         </div>
                         <div class="col-md-8">
-                            <textarea cols="80" rows="3" ng-model="pojo.student.stuDescription" ng-readonly=showOrEdit
+                            <textarea cols="80" rows="3" ng-model="po.stuDescription" ng-readonly=showOrEdit
                                       class="form-control"></textarea>
                         </div>
                     </div>
@@ -278,7 +301,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
                 <span ng-if=!showOrEdit>
-                <button type="button" class="btn btn-primary">
+                <button type="button" ng-click="update(oldStuCode,po)" class="btn btn-primary" data-dismiss="modal">
                     提交更改
                 </button>
                 </span>
@@ -311,7 +334,6 @@
 <script src="../../plugins/iCheck/icheck.min.js"></script>
 <script src="../../plugins/adminLTE/js/app.min.js"></script>
 <script src="../../plugins/treeTable/jquery.treetable.js"></script>
-<script src="../../plugins/select2/select2.full.min.js"></script>
 <script src="../../plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
 <script src="../../plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.zh-CN.js"></script>
 <script src="../../plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>

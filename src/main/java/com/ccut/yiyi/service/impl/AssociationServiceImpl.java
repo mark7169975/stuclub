@@ -4,6 +4,7 @@ import com.ccut.yiyi.dao.*;
 import com.ccut.yiyi.model.*;
 import com.ccut.yiyi.model.group.AssociationApply;
 import com.ccut.yiyi.model.group.AssociationGroup;
+import com.ccut.yiyi.model.group.StudentSimplify;
 import com.ccut.yiyi.service.AssociationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -104,6 +105,7 @@ public class AssociationServiceImpl implements AssociationService {
 
     /**
      * 通过社团类型的typeCode查询其下所有社团
+     *
      * @param code
      * @return
      */
@@ -114,6 +116,7 @@ public class AssociationServiceImpl implements AssociationService {
 
     /**
      * 根据社团id查询一个社团的service实现
+     *
      * @param id
      * @return
      */
@@ -140,10 +143,11 @@ public class AssociationServiceImpl implements AssociationService {
 
     /**
      * 删除社团信息的service实现
+     *
      * @param id
      */
     @Override
-    public void deleteById(Integer id,String stuCode) {
+    public void deleteById(Integer id, String stuCode) {
         //删除社团信息
         associationDao.deleteById(id);
         //删除学生社团关联信息
@@ -151,10 +155,11 @@ public class AssociationServiceImpl implements AssociationService {
         //删除学生和角色关联信息
         stuRoleDao.deleteByAssoId(id);
         //判断学生是否加入别的社团，如果没有加入别的社团则删除学生信息
-        if(stuAssoDao.findBystuCode(stuCode).isEmpty()){
+        if (stuAssoDao.findByStuCode(stuCode).isEmpty()) {
             studentDao.deleteByStuCode(stuCode);
         }
     }
+
     /**
      * 修改社团信息
      *
@@ -168,11 +173,65 @@ public class AssociationServiceImpl implements AssociationService {
         studentDao.save(associationGroup.getStudent());
     }
 
+    @Override
+    public List<StudentSimplify> findOneAss(Integer assId) {
+        //通过社团id查询社团详细信息
+        Optional<Association> byId = associationDao.findById(assId);
+        //创建一个学生集合
+        ArrayList<StudentSimplify> students = new ArrayList<>();
+        //判断是否为null
+        if (byId.isPresent()) {
+            //通过社团id查询中间表数据
+            List<StuRole> byAssoId = stuRoleDao.findByAssoId(assId);
+            //通过社长学号和社团id查询一个中间表数据
+            StuRole byAssoIdAndStuCode = stuRoleDao.findByAssoIdAndStuCode(assId, byId.get().getStuCode());
+            //把社长信息从中间表数据的集合移除
+            byAssoId.remove(byAssoIdAndStuCode);
+            //遍历中间表数据，拿到中间表数据的学号，查询单个学生信息，放入到学生集合里
+            byAssoId.forEach(stuRole -> {
+                StudentSimplify studentSimplify = new StudentSimplify();
+                Student byStuCode = studentDao.findByStuCode(stuRole.getStuCode());
+                studentSimplify.setId(byStuCode.getStuCode());
+                studentSimplify.setText(byStuCode.getStuName());
+                students.add(studentSimplify);
+            });
+        }
+        return students;
+    }
+
+    @Override
+    public void changeManage(String stuCode, Integer assId) {
+        //通过社团id查询此社团信息
+        Optional<Association> byId = associationDao.findById(assId);
+        //判断是否为null
+        if (byId.isPresent()) {
+            //删除旧社长的中间表数据
+            stuRoleDao.deleteByStuCodeAndAssoId(byId.get().getStuCode(),assId);
+            stuAssoDao.deleteByStuCodeAndAssId(byId.get().getStuCode(),assId);
+            //查询旧社长的中间表数据，为了判断是否加入别的社团
+            List<StuRole> byStuCode = stuRoleDao.findByStuCode(byId.get().getStuCode());
+            //如果查询为null，证明没有加入别的社团
+            if(byStuCode.isEmpty()){
+                //如果没有加入别的社团，则删除学生信息
+                studentDao.deleteByStuCode(byId.get().getStuCode());
+            }
+            //修改此社团新社长的学号
+            byId.get().setStuCode(stuCode);
+            //保存到数据库
+            associationDao.save(byId.get());
+            //通过学号和社团id查询中间表数据
+            StuRole byAssoIdAndStuCode = stuRoleDao.findByAssoIdAndStuCode(assId, stuCode);
+            //把权限修改为管理人员
+            byAssoIdAndStuCode.setRoleCode(2001);
+            //保存到数据库
+            stuRoleDao.save(byAssoIdAndStuCode);
+        }
+    }
+
     /**
      * 动态条件构建
      *
-     * @param searchMap
-     * @return
+     * @param searchMap 查询的条件
      */
     private Specification<Association> createSpecification(Map searchMap) {
 

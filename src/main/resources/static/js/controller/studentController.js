@@ -23,24 +23,43 @@ app.controller('studentController', function ($scope, $controller, studentServic
     }
     //true为只读
     $scope.showOrEdit = true;
-    //查询实体
+    //查询一个学生的信息
     $scope.findOne = function (id) {
         $scope.showOrEdit = true;
         studentService.findOne(id).success(
             function (response) {
-                $scope.entity = response;
+                $scope.po = response;
             }
         );
-    }
-    //修改状态
+    };
+    //修改信息前查询数据
+    $scope.oldStuCode = "";
     $scope.changeEdit = function (id) {
         $scope.showOrEdit = false;
         studentService.findOne(id).success(
             function (response) {
-                $scope.entity = response;
+                $scope.po = response;
+                $scope.oldStuCode = $scope.po.stuCode;
             }
         );
-    }
+    };
+    //修改学生信息
+    $scope.update = function (oldStuCode, po) {
+        studentService.update(oldStuCode, po).success(
+            function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    associationService.findByTypeCode($scope.typeCode).success(function (r) {
+                        $scope.AssList = r;
+                    });
+                    $scope.reloadList();//重新加载页面
+                } else {
+                    alert(response.message);
+                }
+            }
+        );
+
+    };
     //查询所有角色
     $scope.findAllRole = function () {
         roleService.findAll().success(
@@ -89,7 +108,7 @@ app.controller('studentController', function ($scope, $controller, studentServic
             function (response) {
                 if (response.success) {
                     alert(response.message);
-                    $scope.entity = {}
+                    $scope.entity = {"stuRole": {"roleCode": 2002, "assoId": 45}}
                 } else {
                     alert(response.message);
                 }
@@ -98,18 +117,42 @@ app.controller('studentController', function ($scope, $controller, studentServic
     };
 
 
-    //批量删除
-    $scope.dele = function (id) {
-        //获取选中的复选框
-        studentService.dele(id).success(
-            function (response) {
-                if (response.success) {
-                    alert(response.message)
-                    $scope.reloadList();//刷新列表
+    //删除学生信息
+    $scope.dele = function (id, assoId) {
+        if (confirm("确认删除吗?") === true) {
+            if (confirm("再次确认删除吗?") === true) {
+                if (confirm("最终确定删除吗?") === true) {
+                    studentService.dele(id, assoId).success(
+                        function (response) {
+                            if (response.success) {
+                                alert(response.message);
+                                $scope.reloadList();//刷新列表
+                            } else {
+                                alert(response.message);
+                            }
+                        }
+                    );
                 }
             }
-        );
-    }
+        }
+    };
+
+    //设置和取消管理人员
+    $scope.setManage = function (stuCode,assId,sign) {
+        if (confirm("确定修改吗?") === true) {
+            studentService.setManage(stuCode,assId,sign).success(
+                function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        $scope.reloadList();//刷新列表
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            );
+        }
+    };
+
 
     $scope.searchEntity = {};//定义搜索对象
     $scope.assoId = 0;//页面初始化时，未获得需要查询的社团id
@@ -120,6 +163,7 @@ app.controller('studentController', function ($scope, $controller, studentServic
         $scope.aaa = 1;
         //如果未获取需要查询的社团id时，则不查询，等到获取到社团id自动查询
         if ($scope.assoId !== 0 && $scope.assoId !== undefined) {
+
             //page为页码，rows为查询几条数据，assoId为查询的社团id，searchEntity为查询的数据
             studentService.search(page, rows, $scope.assoId, $scope.searchEntity).success(
                 function (response) {

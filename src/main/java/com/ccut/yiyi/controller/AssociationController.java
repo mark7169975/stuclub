@@ -6,6 +6,7 @@ import com.ccut.yiyi.common.StatusCode;
 import com.ccut.yiyi.model.Association;
 import com.ccut.yiyi.model.group.AssociationApply;
 import com.ccut.yiyi.model.group.AssociationGroup;
+import com.ccut.yiyi.model.group.StudentSimplify;
 import com.ccut.yiyi.service.AssociationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class AssociationController {
     @Autowired
     private AssociationService associationService;
+
     /**
      * 社团申请Controller
      *
@@ -43,6 +45,7 @@ public class AssociationController {
             return new Result(false, StatusCode.ERROR, "增加失败");
         }
     }
+
     /**
      * 社团查询，分页+多条件查询，默认查询条件为null
      *
@@ -64,8 +67,10 @@ public class AssociationController {
             return new Result(false, StatusCode.ERROR, "查询失败");
         }
     }
+
     /**
      * 查询通过社团类型typeCode下的所有社团
+     *
      * @param code
      * @return
      */
@@ -76,6 +81,7 @@ public class AssociationController {
 
     /**
      * 根据社团ID查询一个社团
+     *
      * @param id ID
      * @return
      */
@@ -83,14 +89,16 @@ public class AssociationController {
     public AssociationGroup findOne(@PathVariable Integer id) {
         return associationService.findOne(id);
     }
+
     /**
      * 删除社团信息
+     *
      * @param id
      */
     @DeleteMapping("delete/{id}/{stuCode}")
-    public Result delete(@PathVariable Integer id,@PathVariable String stuCode) {
+    public Result delete(@PathVariable Integer id, @PathVariable String stuCode) {
         try {
-            associationService.deleteById(id,stuCode);
+            associationService.deleteById(id, stuCode);
             return new Result(true, StatusCode.OK, "删除成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,18 +109,47 @@ public class AssociationController {
 
     /**
      * 修改社团信息
+     *
      * @param associationGroup
      * @return
      */
     @PostMapping("update")
-    public Result update(@RequestBody AssociationGroup associationGroup){
+    public Result update(@RequestBody AssociationGroup associationGroup) {
         try {
             associationService.update(associationGroup);
-            return new Result(true,StatusCode.OK,"修改成功");
-        }catch (Exception e){
+            return new Result(true, StatusCode.OK, "修改成功");
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,StatusCode.ERROR,"修改失败");
+            return new Result(false, StatusCode.ERROR, "修改失败");
         }
 
+    }
+
+    /**
+     * 点击换届按钮，查询信息，返回此社团学生信息
+     *
+     * @param assId 社团id
+     */
+    @GetMapping("findOneAss/{assId}")
+    public List<StudentSimplify> findOneAss(@PathVariable Integer assId) {
+        return associationService.findOneAss(assId);
+    }
+
+    /**
+     * 社团换届修改信息的controller
+     *
+     * @param changeManageStuCode 需要更换的学生学号
+     * @param changeManageAssId   社团id
+     */
+    @PostMapping("changeManage/{changeManageStuCode}/{changeManageAssId}")
+    public Result changeManage(@PathVariable String changeManageStuCode, @PathVariable Integer changeManageAssId) {
+
+        try {
+            associationService.changeManage(changeManageStuCode, changeManageAssId);
+            return new Result(true, StatusCode.OK, "修改成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, StatusCode.ERROR, "修改失败");
+        }
     }
 }

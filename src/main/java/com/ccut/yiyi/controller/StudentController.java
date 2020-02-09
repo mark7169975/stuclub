@@ -3,7 +3,7 @@ package com.ccut.yiyi.controller;
 import com.ccut.yiyi.common.PageResult;
 import com.ccut.yiyi.common.Result;
 import com.ccut.yiyi.common.StatusCode;
-import com.ccut.yiyi.model.group.AssociationGroup;
+import com.ccut.yiyi.model.Student;
 import com.ccut.yiyi.model.group.StudentGroup;
 import com.ccut.yiyi.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,13 +65,13 @@ public class StudentController {
     }
 
     /**
-     * 根据ID查询
+     * 根据学生id查询一个学生信息
      *
      * @param id ID
      * @return
      */
     @GetMapping("findOne/{id}")
-    public AssociationGroup findOne(@PathVariable Integer id) {
+    public Student findOne(@PathVariable Integer id) {
         try {
             return studentService.findById(id);
         } catch (Exception e) {
@@ -81,19 +81,48 @@ public class StudentController {
     }
 
     /**
-     * 删除
+     * 修改学生信息
      *
-     * @param id
+     * @param student
+     * @return
      */
-    @DeleteMapping("delete/{id}")
-    public Result delete(@PathVariable Integer id) {
+    @PostMapping("update/{oldStuCode}")
+    public Result update(@PathVariable String oldStuCode, @RequestBody Student student) {
         try {
-            studentService.deleteById(id);
+            studentService.update(oldStuCode, student);
+            return new Result(true, StatusCode.OK, "修改成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, StatusCode.ERROR, "修改失败,学号冲突");
+        }
+
+    }
+
+    /**
+     * 删除学生信息
+     *
+     * @param id 学生主键id
+     */
+    @DeleteMapping("delete/{id}/{assoId}")
+    public Result delete(@PathVariable Integer id, @PathVariable Integer assoId) {
+        try {
+            studentService.deleteById(id, assoId);
             return new Result(true, StatusCode.OK, "删除成功");
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false, StatusCode.ERROR, "删除失败");
+            return new Result(false, StatusCode.ERROR, "删除失败,社团社长不能删除");
         }
 
+    }
+
+    @PostMapping("updateManage/{stuCode}/{assId}/{sign}")
+    public Result updateManage(@PathVariable String stuCode, @PathVariable Integer assId, @PathVariable Integer sign) {
+        try {
+            studentService.updateManage(stuCode, assId, sign);
+            return new Result(true, StatusCode.OK, "修改成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, StatusCode.ERROR, "修改失败");
+        }
     }
 }

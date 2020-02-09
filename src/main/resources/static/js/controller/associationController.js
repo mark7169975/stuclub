@@ -92,9 +92,9 @@ app.controller('associationController', function ($scope, $controller, associati
 
     //删除社团信息
     $scope.dele = function (id, stuCode) {
-        if(confirm("确认删除吗?") === true){
-            if(confirm("再次确认删除吗?") === true) {
-                if(confirm("最终确定删除吗?") === true) {
+        if (confirm("确认删除吗?") === true) {
+            if (confirm("再次确认删除吗?") === true) {
+                if (confirm("最终确定删除吗?") === true) {
                     associationService.dele(id, stuCode).success(
                         function (response) {
                             if (response.success) {
@@ -109,6 +109,35 @@ app.controller('associationController', function ($scope, $controller, associati
             }
         }
     };
+    $scope.changeManageAssId = 0;
+    $scope.studentByAssIdList = {data: []};
+    $scope.findOneAss = function (assId) {
+        $scope.changeManageAssId=assId;
+        associationService.findOneAss(assId).success(
+            function (response) {
+                $scope.studentByAssIdList = {data: response};
+            }
+        )
+    };
+    $scope.changeStudentByAssIdList=function(){
+        $scope.studentByAssIdList = {data: []};
+        $scope.yyy={};
+        $scope.changeManageStuCode={};
+    };
+
+    $scope.changeManage = function (changeManageStuCode) {
+        associationService.changeManage(changeManageStuCode,$scope.changeManageAssId).success(
+            function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    $scope.reloadList();//刷新列表
+                } else {
+                    alert(response.message);
+                }
+
+            });
+
+    }
 
     $scope.searchEntity = {};//定义搜索对象
 

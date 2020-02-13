@@ -65,4 +65,10 @@ public interface StudentService {
      * @param sign    标记 1为修改为管理人员 0为取消管理员
      */
     void updateManage(String stuCode, Integer assId, Integer sign);
+
+    /**
+     * 通过学号查询学生信息
+     * @param stuCode   学号
+     */
+    Student findByStuCode(String stuCode);
 }

@@ -198,6 +198,19 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
+     * 通过学号查询学生详细信息
+     *
+     * @param stuCode 学号
+     */
+    @Override
+    public Student findByStuCode(String stuCode) {
+        if (!stuCode.isEmpty()) {
+            return studentDao.findByStuCode(stuCode);
+        }
+        return null;
+    }
+
+    /**
      * 动态条件构建
      *
      * @param searchMap 查询条件

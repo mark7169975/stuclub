@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <!-- 页面meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
 
     <title>资产列表</title>
 
@@ -25,22 +23,21 @@
 
     <script src="../../plugins/angularjs/angular.min.js"></script>
 
-
     <!--分割线-->
     <!-- 分页组件开始 -->
     <script src="../../plugins/angularjs/pagination.js"></script>
     <link rel="stylesheet" href="../../plugins/angularjs/pagination.css">
     <!-- 分页组件结束 -->
 
-    <script src="../../js/base_pagination.js"></script>
-    <script type="text/javascript" src="../../js/controller/baseController.js"></script>
+    <script type="text/javascript" src="../../js/base_pagination.js"></script>
     <script type="text/javascript" src="../../js/service/assetService.js"></script>
-    <script type="text/javascript" src="../../js/controller/assetController.js"></script>
 
+
+    <script type="text/javascript" src="../../js/controller/baseController.js"></script>
+    <script type="text/javascript" src="../../js/controller/assetController.js"></script>
 </head>
 
-<body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="associationController"
-      ng-init="findAllType()">
+<body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="assetController">
 
 <!-- 内容区域 -->
 <!-- @@master = admin-layout.html-->
@@ -77,8 +74,7 @@
                                 <td> 名称</td>
                                 <td> 数量</td>
                                 <td> 单位</td>
-                                <td> 所属社团</td>
-                                <td> 描述</td>
+                                <td> 资产地点</td>
                                 <td> 操作</td>
                             </tr>
                             </thead>
@@ -87,7 +83,6 @@
                                 <td> 桌子</td>
                                 <td> 10</td>
                                 <td> 张</td>
-                                <td> 科技实践部</td>
                                 <td> abcd</td>
                                 <td>
                                     <a href="javascript:" class="edit-asset">编辑</a>

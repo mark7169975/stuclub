@@ -1,5 +1,5 @@
  //控制层 
-app.controller('assetController' ,function($scope,$controller   ,assetService){	
+app.controller('assetController' ,function($scope,$controller ,assetService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -21,8 +21,8 @@ app.controller('assetController' ,function($scope,$controller   ,assetService){
 			}			
 		);
 	}
-	
-	//查询实体 
+
+	//查询实体
 	$scope.findOne=function(id){				
 		assetService.findOne(id).success(
 			function(response){

@@ -104,7 +104,6 @@ public class AssociationController {
             e.printStackTrace();
             return new Result(false, StatusCode.ERROR, "删除失败");
         }
-
     }
 
     /**
@@ -151,5 +150,16 @@ public class AssociationController {
             e.printStackTrace();
             return new Result(false, StatusCode.ERROR, "修改失败");
         }
+    }
+
+    /**
+     * 通过登录的管理员信息，查询此管理员管理的所有社团，如果是超级管理则查询所有社团
+     *
+     * @param stuCode 学号
+     * @param role    角色权限
+     */
+    @GetMapping("findByStuCodeAndRole/{stuCode}/{role}")
+    public List<Association> findByStuCodeAndRole(@PathVariable String stuCode, @PathVariable String role) {
+        return associationService.findByStuCodeAndRole(stuCode, role);
     }
 }

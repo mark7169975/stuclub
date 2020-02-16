@@ -9,6 +9,10 @@ app.service('associationService', function ($http) {
     this.findPage = function (page, rows) {
         return $http.get('../association/findPage.do?page=' + page + '&rows=' + rows);
     }
+    //通过登录网址管理员信息，查询此管理员加入的所有是管理角色的社团
+    this.findByStuCodeAndRole = function (stuCode,role) {
+        return $http.get('/association/findByStuCodeAndRole/'+stuCode+'/'+role);
+    };
     //查询一个社团详情
     this.findOne = function (id) {
         return $http.get('/association/findOne/' + id);

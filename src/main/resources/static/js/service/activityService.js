@@ -14,9 +14,9 @@ app.service('activityService',function($http){
 		return $http.get('../activity/findOne.do?id='+id);
 	}
 	//增加 
-	this.add=function(entity){
-		return  $http.post('../activity/add.do',entity );
-	}
+	this.add=function(loginStuCode,entity){
+		return  $http.post('/activity/add/'+loginStuCode,entity );
+	};
 	//修改 
 	this.update=function(entity){
 		return  $http.post('../activity/update.do',entity );

@@ -1,5 +1,6 @@
 package com.ccut.yiyi.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -36,10 +37,8 @@ public class Activity implements Serializable {
     private Integer actMoney;//活动经费
 
     @Column(name = "start_time")
+    @JsonFormat(pattern = "yyyy年MM月dd日",timezone = "GMT+8")
     private Date startTime;//开始时间
-
-    @Column(name = "end_time")
-    private Date endTime;//结束时间
 
     @Column(name = "act_address")
     private String actAddress;//活动地点

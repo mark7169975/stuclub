@@ -15,14 +15,16 @@
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/adminLTE/css/AdminLTE.css">
     <link rel="stylesheet" href="../../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../../plugins/datepicker/datepicker3.css">
     <link rel="stylesheet" href="../../css/style.css">
-    <script src="../../plugins/jQuery/jquery-2.2.3.min.js"></script>
-    <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
-
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/select2/select2.css"/>
     <link rel="stylesheet" href="../../plugins/select2/select2-bootstrap.css"/>
-    <script src="../../plugins/select2/select2.min.js" type="text/javascript"></script>
 
+
+    <script src="../../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../../plugins/jQueryUI/jquery-ui.min.js"></script>
+    <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="../../plugins/angularjs/angular.min.js"></script>
 
 
@@ -32,14 +34,20 @@
     <link rel="stylesheet" href="../../plugins/angularjs/pagination.css">
     <!-- 分页组件结束 -->
 
-    <script src="../../js/base_pagination.js"></script>
-    <script type="text/javascript" src="../../js/controller/baseController.js"></script>
+    <script type="text/javascript" src="../../js/base_pagination.js"></script>
     <script type="text/javascript" src="../../js/service/noticeService.js"></script>
+    <script type="text/javascript" src="../../js/service/loginService.js"></script>
+    <script type="text/javascript" src="../../js/service/associationService.js"></script>
+
+    <script type="text/javascript" src="../../js/controller/baseController.js"></script>
     <script type="text/javascript" src="../../js/controller/noticeController.js"></script>
+    <script type="text/javascript" src="../../js/controller/indexController.js"></script>
+    <script type="text/javascript" src="../../js/controller/associationController.js"></script>
 
 </head>
 
-<body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="associationController">
+<body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="noticeController"
+      ng-init="queryLoginMess()">
 
 <!-- 内容区域 -->
 <!-- @@master = admin-layout.html-->
@@ -64,89 +72,40 @@
                     <div class="row">
                         <div class="col-md-12">
                             <ul class="timeline">
-                                <li class="time-label">
+                                <ul class="timeline" ng-repeat="po in list">
+                                    <li class="time-label"
+                                        ng-if="(list[$index].notice.createTime |date:'yyyy/MM/dd') !=(list[$index-1].notice.createTime |date:'yyyy/MM/dd') ">
                                         <span class="bg-red">
-                                            2019/4/19
+                                            {{po.notice.createTime |date:"yyyy/MM/dd"}}
                                         </span>
-                                </li>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-envelope bg-blue"></i>
+
+                                        <div class="timeline-item">
+                                            <span class="time"><i class="fa fa-clock-o"></i> {{po.notice.createTime |date:"HH:mm"}} {{po.association.assName}}</span>
+
+                                            <h3 class="timeline-header">{{po.notice.notTitle}}</h3>
+
+                                            <div class="timeline-body">{{po.notice.notContent}}</div>
+                                            <div class="timeline-footer">
+                                                <a class="btn btn-primary btn-xs" data-target="#editModal"
+                                                   data-toggle="modal" ng-click="findOne(po.notice.notId)">修改</a>
+                                                <a class="btn btn-danger btn-xs" ng-click="dele(po.notice.notId)">删除</a>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                </ul>
                                 <li>
-                                    <i class="fa fa-envelope bg-blue"></i>
-
-                                    <div class="timeline-item">
-                                        <span class="time"><i class="fa fa-clock-o"></i> 科技实践部</span>
-
-                                        <h3 class="timeline-header">2019黑大篮球挑战赛</h3>
-
-                                        <div class="timeline-body">
-                                            不要再纸上谈兵，不要再场外指点，相信自己，相信自己的团队。阿迪达斯街头篮球赛，用表现证明一切。
-                                            今年７月，约战广州、武汉、深圳、杭州、上海、北京、沈阳、成都八大战区的各路好手，三人一帮，篮下一战。
-                                            各城市冠军除获赠adidas提供的巨额奖品外，更能赴广州与麦迪过招，一较高低……
-                                        </div>
-                                        <div class="timeline-footer">
-                                            <a class="btn btn-primary btn-xs">更多</a>
-                                            <a class="btn btn-danger btn-xs">删除</a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="time-label">
-                                        <span class="bg-red">
-                                            2019/4/19
-                                        </span>
-                                </li>
-                                <li>
-                                    <i class="fa fa-envelope bg-blue"></i>
-
-                                    <div class="timeline-item">
-                                        <span class="time"><i class="fa fa-clock-o"></i> 科技实践部</span>
-
-                                        <h3 class="timeline-header">2019黑大篮球挑战赛</h3>
-
-                                        <div class="timeline-body">
-                                            不要再纸上谈兵，不要再场外指点，相信自己，相信自己的团队。阿迪达斯街头篮球赛，用表现证明一切。
-                                            今年７月，约战广州、武汉、深圳、杭州、上海、北京、沈阳、成都八大战区的各路好手，三人一帮，篮下一战。
-                                            各城市冠军除获赠adidas提供的巨额奖品外，更能赴广州与麦迪过招，一较高低……
-                                        </div>
-                                        <div class="timeline-footer">
-                                            <a class="btn btn-primary btn-xs">更多</a>
-                                            <a class="btn btn-danger btn-xs">删除</a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="time-label">
-                                        <span class="bg-red">
-                                            2019/4/19
-                                        </span>
-                                </li>
-                                <li>
-                                    <i class="fa fa-envelope bg-blue"></i>
-
-                                    <div class="timeline-item">
-                                        <span class="time"><i class="fa fa-clock-o"></i> 科技实践部</span>
-
-                                        <h3 class="timeline-header">2019黑大篮球挑战赛</h3>
-
-                                        <div class="timeline-body">
-                                            不要再纸上谈兵，不要再场外指点，相信自己，相信自己的团队。阿迪达斯街头篮球赛，用表现证明一切。
-                                            今年７月，约战广州、武汉、深圳、杭州、上海、北京、沈阳、成都八大战区的各路好手，三人一帮，篮下一战。
-                                            各城市冠军除获赠adidas提供的巨额奖品外，更能赴广州与麦迪过招，一较高低……
-                                        </div>
-                                        <div class="timeline-footer">
-                                            <a class="btn btn-primary btn-xs">更多</a>
-                                            <a class="btn btn-danger btn-xs">删除</a>
-                                        </div>
-                                    </div>
+                                    <i class="fa fa-clock-o bg-gray"></i>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="box-footer">
-                    <div class="row">
-                        <#-- 分页 -->
-                    </div>
-                </div>
                 <!-- 分页 -->
-                <tm-pagination conf="paginationConf"></tm-pagination>
+                <tm-pagination conf="paginationConfByTime"></tm-pagination>
                 <!-- 分页 -->
             </div>
         </div>
@@ -156,6 +115,49 @@
 
 <!-- @@close -->
 <!-- 内容区域 /-->
+<!--编辑窗口-->
+
+<div class="modal fade" id="editModal" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    公告信息
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="row margin-bottom">
+                        <div class="col-md-2 text-center">
+                            <label class="control-label">公告标题: </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" name="notTitle" ng-model="entity.notTitle" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row margin-bottom">
+                        <div class="col-md-2 text-center">
+                            <Label class="control-label">公告内容:</Label>
+                        </div>
+                        <div class="col-md-8">
+                            <textarea cols="80" rows="3" ng-model="entity.notContent" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" ng-click="update(loginMess.loginStuCode,entity)" class="btn btn-primary" data-dismiss="modal">
+                    提交更改
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </body>

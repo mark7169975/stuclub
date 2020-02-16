@@ -9,15 +9,13 @@ import com.ccut.yiyi.service.AssociationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @ClassName: AssociationServiceImpl
@@ -206,12 +204,12 @@ public class AssociationServiceImpl implements AssociationService {
         //判断是否为null
         if (byId.isPresent()) {
             //删除旧社长的中间表数据
-            stuRoleDao.deleteByStuCodeAndAssoId(byId.get().getStuCode(),assId);
-            stuAssoDao.deleteByStuCodeAndAssId(byId.get().getStuCode(),assId);
+            stuRoleDao.deleteByStuCodeAndAssoId(byId.get().getStuCode(), assId);
+            stuAssoDao.deleteByStuCodeAndAssId(byId.get().getStuCode(), assId);
             //查询旧社长的中间表数据，为了判断是否加入别的社团
             List<StuRole> byStuCode = stuRoleDao.findByStuCode(byId.get().getStuCode());
             //如果查询为null，证明没有加入别的社团
-            if(byStuCode.isEmpty()){
+            if (byStuCode.isEmpty()) {
                 //如果没有加入别的社团，则删除学生信息
                 studentDao.deleteByStuCode(byId.get().getStuCode());
             }
@@ -226,6 +224,30 @@ public class AssociationServiceImpl implements AssociationService {
             //保存到数据库
             stuRoleDao.save(byAssoIdAndStuCode);
         }
+    }
+
+    @Override
+    public List<Association> findByStuCodeAndRole(String stuCode, String role) {
+        //判断角色是不是超级管理员
+        if ("ROLE_SUPERADMIN".equals(role)) {
+            //如果是超级管理，则返回所有社团信息，排序为通过社团名称升序
+            return associationDao.findAll(Sort.by("assName"));
+        }
+        if ("ROLE_ADMIN".equals(role)) {
+            ArrayList<Association> associations = new ArrayList<>();
+            //如果是普通管理，则查询此管理所管理的所有社团
+            stuRoleDao.findByStuCodeAndRoleCodeNot(stuCode, 2002).forEach(stuRole -> {
+                //通过社团id查询社团信息
+                Optional<Association> byId = associationDao.findById(stuRole.getAssoId());
+                //如果不为null，则加入associations集合
+                byId.ifPresent(associations::add);
+            });
+            //通过社团名称排序，升序
+            associations.sort(Comparator.comparingInt(o -> o.getAssName().charAt(0)));
+            return associations;
+        }
+        //如果不是超级管理也不是普通管理，则返回null
+        return null;
     }
 
     /**

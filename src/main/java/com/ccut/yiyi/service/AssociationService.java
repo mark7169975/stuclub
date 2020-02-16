@@ -80,4 +80,13 @@ public interface AssociationService {
      * @param assId   社团id
      */
     void changeManage(String stuCode, Integer assId);
+
+    /**
+     * 通过登录系统管理人员信息查询此管理加入的所有能被他管理的社团，如果是超级管理，则返回所有社团信息
+     *
+     * @param stuCode 学号
+     * @param role    角色
+     * @return 返回数据
+     */
+    List<Association> findByStuCodeAndRole(String stuCode, String role);
 }

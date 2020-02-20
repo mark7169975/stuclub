@@ -2,6 +2,7 @@ package com.ccut.yiyi.service.impl;
 
 import com.ccut.yiyi.dao.*;
 import com.ccut.yiyi.model.*;
+import com.ccut.yiyi.model.group.AssoSimplify;
 import com.ccut.yiyi.model.group.AssociationApply;
 import com.ccut.yiyi.model.group.AssociationGroup;
 import com.ccut.yiyi.model.group.StudentSimplify;
@@ -248,6 +249,23 @@ public class AssociationServiceImpl implements AssociationService {
         }
         //如果不是超级管理也不是普通管理，则返回null
         return null;
+    }
+
+    @Override
+    public List<AssoSimplify> findAll() {
+        //查询所有社团信息
+        List<Association> assName = associationDao.findAll();
+        ArrayList<AssoSimplify> assoSimplifies = new ArrayList<>();
+        //遍历社团信息
+        assName.forEach(association -> {
+            AssoSimplify assoSimplify = new AssoSimplify();
+            assoSimplify.setId(association.getAssId());
+            assoSimplify.setText(association.getAssName());
+            assoSimplifies.add(assoSimplify);
+        });
+        //排序
+        assoSimplifies.sort(Comparator.comparingInt(o -> o.getText().charAt(0)));
+        return assoSimplifies;
     }
 
     /**

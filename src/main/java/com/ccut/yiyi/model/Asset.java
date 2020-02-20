@@ -27,6 +27,9 @@ public class Asset implements Serializable {
     @Column(name = "asset_number")
     private Integer assetNumber;//总数量
 
+    @Column(name = "asset_borrow")
+    private Integer assetBorrow;//已借出数量
+
     @Column(name = "asset_remain")
     private Integer assetRemain;//剩余数量
 

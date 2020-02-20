@@ -33,11 +33,11 @@ public class Activity implements Serializable {
     @Column(name = "stu_code")
     private String stuCode;//学号
 
-    @Column(name = "act_money")
-    private Integer actMoney;//活动经费
+    @Column(name = "stu_name")
+    private String stuName;//负责人
 
     @Column(name = "start_time")
-    @JsonFormat(pattern = "yyyy年MM月dd日",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy年MM月dd日", timezone = "GMT+8")
     private Date startTime;//开始时间
 
     @Column(name = "act_address")
@@ -47,5 +47,5 @@ public class Activity implements Serializable {
     private String actDescription;//活动简介
 
     @Column(name = "mark")
-    private Integer mark;//审核：0未通过 1通过
+    private Integer mark;//审核：0未审核 1通过 2未通过
 }

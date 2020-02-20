@@ -4,6 +4,7 @@ import com.ccut.yiyi.common.PageResult;
 import com.ccut.yiyi.common.Result;
 import com.ccut.yiyi.common.StatusCode;
 import com.ccut.yiyi.model.Association;
+import com.ccut.yiyi.model.group.AssoSimplify;
 import com.ccut.yiyi.model.group.AssociationApply;
 import com.ccut.yiyi.model.group.AssociationGroup;
 import com.ccut.yiyi.model.group.StudentSimplify;
@@ -161,5 +162,10 @@ public class AssociationController {
     @GetMapping("findByStuCodeAndRole/{stuCode}/{role}")
     public List<Association> findByStuCodeAndRole(@PathVariable String stuCode, @PathVariable String role) {
         return associationService.findByStuCodeAndRole(stuCode, role);
+    }
+
+    @GetMapping("findAll")
+    public List<AssoSimplify> findAll() {
+        return associationService.findAll();
     }
 }

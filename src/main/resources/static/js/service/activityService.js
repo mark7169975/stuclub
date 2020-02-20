@@ -13,9 +13,10 @@ app.service('activityService',function($http){
 	this.findOne=function(id){
 		return $http.get('../activity/findOne.do?id='+id);
 	}
+
 	//增加 
-	this.add=function(loginStuCode,entity){
-		return  $http.post('/activity/add/'+loginStuCode,entity );
+	this.add=function(loginStuCode,remain,entity){
+		return  $http.post('/activity/add/'+loginStuCode+'/'+remain,entity );
 	};
 	//修改 
 	this.update=function(entity){
@@ -27,6 +28,6 @@ app.service('activityService',function($http){
 	}
 	//搜索
 	this.search=function(page,rows,searchEntity){
-		return $http.post('../activity/search.do?page='+page+"&rows="+rows, searchEntity);
+		return $http.post('/activity/search/'+page+'/'+rows, searchEntity);
 	}    	
 });

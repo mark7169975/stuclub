@@ -1,6 +1,7 @@
 package com.ccut.yiyi.service;
 
 import com.ccut.yiyi.model.Association;
+import com.ccut.yiyi.model.group.AssoSimplify;
 import com.ccut.yiyi.model.group.AssociationApply;
 import com.ccut.yiyi.model.group.AssociationGroup;
 import com.ccut.yiyi.model.group.StudentSimplify;
@@ -89,4 +90,11 @@ public interface AssociationService {
      * @return 返回数据
      */
     List<Association> findByStuCodeAndRole(String stuCode, String role);
+
+    /**
+     * 审核中心，查询所有社团信息
+     *
+     * @return 返回数据
+     */
+    List<AssoSimplify> findAll();
 }

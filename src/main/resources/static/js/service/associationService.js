@@ -1,17 +1,17 @@
 //服务层
 app.service('associationService', function ($http) {
 
-    //读取列表数据绑定到表单中
+    //审核中心页面，查询所有社团信息
     this.findAll = function () {
-        return $http.get('../association/findAll.do');
-    }
+        return $http.get('/association/findAll');
+    };
     //分页
     this.findPage = function (page, rows) {
         return $http.get('../association/findPage.do?page=' + page + '&rows=' + rows);
     }
     //通过登录网址管理员信息，查询此管理员加入的所有是管理角色的社团
-    this.findByStuCodeAndRole = function (stuCode,role) {
-        return $http.get('/association/findByStuCodeAndRole/'+stuCode+'/'+role);
+    this.findByStuCodeAndRole = function (stuCode, role) {
+        return $http.get('/association/findByStuCodeAndRole/' + stuCode + '/' + role);
     };
     //查询一个社团详情
     this.findOne = function (id) {

@@ -6,15 +6,15 @@ import lombok.ToString;
 import java.io.Serializable;
 
 /**
- * @ClassName: StudentSimplify
+ * @ClassName: AssoSimplify
  * @Description: TODO
  * @Author: Mark
- * @Date: 2020/2/9 14:34
+ * @Date: 2020/2/20 18:01
  * @version: V1.0
  */
 @Data
 @ToString
-public class StudentSimplify implements Serializable {
-    private String id;
+public class AssoSimplify implements Serializable {
+    private Integer id;
     private String text;
 }

@@ -27,7 +27,7 @@
     <script src="../../plugins/datepicker/bootstrap-datepicker.js"></script>
     <script src="../../plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
 
-    <script src="../../plugins/angularjs/angular.min.js"></script>
+    <script type="text/javascript" src="../../plugins/angularjs/angular.min.js"></script>
     <script src="../../plugins/select2/select2.min.js" type="text/javascript"></script>
 
     <!--分割线-->
@@ -36,16 +36,19 @@
     <script type="text/javascript" src="../../js/service/activityService.js"></script>
     <script type="text/javascript" src="../../js/service/loginService.js"></script>
     <script type="text/javascript" src="../../js/service/associationService.js"></script>
+    <script type="text/javascript" src="../../js/service/assetService.js"></script>
+
 
     <script type="text/javascript" src="../../js/controller/baseController.js"></script>
     <script type="text/javascript" src="../../js/controller/activityController.js"></script>
     <script type="text/javascript" src="../../js/controller/indexController.js"></script>
     <script type="text/javascript" src="../../js/controller/associationController.js"></script>
+    <script type="text/javascript" src="../../js/controller/assetController.js"></script>
 
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="activityController"
-      ng-init="queryLoginMess()">
+      ng-init="queryLoginMess();findAllAsset()">
 
 <!-- 内容区域 -->
 <!-- @@master = admin-layout.html-->
@@ -68,7 +71,7 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h2 class="box-title">
-                        填写活动信息
+                        填写活动信息{{entity}}
                     </h2>
                 </div>
                 <div class="box-body">
@@ -89,8 +92,8 @@
                                 <div class="col-md-2"></div>
                                 <div class="col-md-8">
                                     <div class="form-group">
-                                        <label>活动部门</label>{{entity}}
-                                        <select class="select2 form-control"
+                                        <label>活动部门</label>
+                                        <select class="form-control"
                                                 ng-model="entity.assId"
                                                 ng-options="x.assId as x.assName for x in AssList">
                                         </select>
@@ -111,22 +114,6 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="row">
-                                <div class="col-md-2"></div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label>活动预算</label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">¥</span>
-                                            <input type="text" ng-model="entity.actMoney" class="form-control">
-                                            <span class="input-group-addon">.00</span>
-                                            <span class="input-group-addon">元</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-2"></div>
@@ -170,6 +157,55 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h2 class="box-title">活动所需资产</h2>{{assetIds}} -{{remain}}
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-8 form-group">
+                            <div class="row margin-bottom">
+                                <div class="col-md-10">
+                                    <select class="select2 form-control" multiple="multiple"
+                                            placeholder="请选择所需的资产" ng-model="assetIds"
+                                            ng-options="a.assetId as a.assetName for a in AssetList">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box-body">
+                    <div class="form-group">
+                        <table id="asset-table" class="table table-bordered table-hover" >
+                            <thead>
+                            <tr ng-hide="sign">
+                                <td> 名称</td>
+                                <td> 申请数量</td>
+                                <td> 剩余数量</td>
+                                <td> 单位</td>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr ng-repeat=" x in AssetList" ng-if="condition(x)">
+                                    <td> {{x.assetName}}</td>
+                                    <td><input type="text" ng-model="$parent.remain[$index]"/></td>
+                                    <td> {{x.assetRemain}}</td>
+                                    <td>{{x.assetUnit}}</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

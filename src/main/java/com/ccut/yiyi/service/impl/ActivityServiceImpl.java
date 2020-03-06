@@ -11,6 +11,7 @@ import com.ccut.yiyi.model.Association;
 import com.ccut.yiyi.model.group.ActivityGroup;
 import com.ccut.yiyi.service.ActivityService;
 import com.ccut.yiyi.service.AssetService;
+import com.ccut.yiyi.service.AssociationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -45,9 +47,24 @@ public class ActivityServiceImpl implements ActivityService {
     private ActAssetDao actAssetDao;
     @Autowired
     private AssociationDao associationDao;
+    @Autowired
+    private AssociationService associationService;
 
     @Override
     public void add(String loginStuCode, Integer[] remain, Activity activity) {
+        //判断是否使用资产
+        int sign = 0;
+        for (int i = 0; i < remain.length; i++) {
+            if (remain[i] == null) {
+                sign++;
+            }
+        }
+        //如果相等则未使用资产
+        if (sign == remain.length) {
+            activity.setAssetSign(0);
+        } else {
+            activity.setAssetSign(1);
+        }
         //设置添加活动的管理员学号
         activity.setStuCode(loginStuCode);
         //活动默认审核状态为0,0表示未审核，1表示通过，2表示未通过
@@ -91,6 +108,8 @@ public class ActivityServiceImpl implements ActivityService {
     public void add(String loginStuCode, Activity activity) {
         //设置添加活动的管理员学号
         activity.setStuCode(loginStuCode);
+        //未使用资产设置标记
+        activity.setAssetSign(0);
         //活动默认审核状态为0,0表示未审核，1表示通过，2表示未通过
         activity.setMark(0);
         activityDao.save(activity);
@@ -98,6 +117,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public Page<ActivityGroup> searchApproval(Map searchMap, int page, int rows) {
+        //定义标记 在活动审核页面
         Specification<Activity> specification = createSpecification(searchMap);
         PageRequest pageRequest = PageRequest.of(page - 1, rows, Sort.Direction.ASC, "startTime");
         return activityDao.findAll(specification, pageRequest).map(activity -> {
@@ -120,8 +140,123 @@ public class ActivityServiceImpl implements ActivityService {
         }
     }
 
+    @Override
+    public Page<ActivityGroup> findSearch(Map searchMap, int page, int rows, String stuCode, String role) {
+        //定义标记 在活动列表页面
+        List<Association> byStuCodeAndRole = associationService.findByStuCodeAndRole(stuCode, role);
+        if (!byStuCodeAndRole.isEmpty()) {
+            ArrayList<Integer> integers = new ArrayList<>();
+            //把查询出来的社团信息的社团id放在list集合里
+            byStuCodeAndRole.forEach(association -> integers.add(association.getAssId()));
+            //调用动态构建
+            Specification<Activity> specification = createSpecification(searchMap, integers);
+            PageRequest pageRequest = PageRequest.of(page - 1, rows, Sort.Direction.DESC, "startTime");
+            return activityDao.findAll(specification, pageRequest).map(activity -> {
+                ActivityGroup activityGroup = new ActivityGroup();
+                activityGroup.setActivity(activity);
+                Optional<Association> byId = associationDao.findById(activity.getAssId());
+                byId.ifPresent(activityGroup::setAssociation);
+                return activityGroup;
+            });
+        }
+        return null;
+    }
+
+    @Override
+    public Page<ActivityGroup> findSearch(int page, int rows) {
+        PageRequest pageRequest = PageRequest.of(page - 1, rows, Sort.Direction.DESC, "startTime");
+        return activityDao.findByMark(1, pageRequest).map(activity -> {
+            ActivityGroup activityGroup = new ActivityGroup();
+            activityGroup.setActivity(activity);
+            Optional<Association> byId = associationDao.findById(activity.getAssId());
+            byId.ifPresent(activityGroup::setAssociation);
+            return activityGroup;
+        });
+
+    }
+
+    @Override
+    public List<ActivityGroup> findAll() {
+        List<Activity> byMark = activityDao.findByMark(1);
+        byMark.sort((o1, o2) -> Math.toIntExact((o2.getStartTime().getTime() - o1.getStartTime().getTime())));
+        ArrayList<ActivityGroup> activityGroups = new ArrayList<>();
+        if (byMark.size() > 6) {
+            List<Activity> activities = byMark.subList(0, 6);
+            activities.forEach(activity -> {
+                ActivityGroup activityGroup = new ActivityGroup();
+                activityGroup.setActivity(activity);
+                Optional<Association> byId = associationDao.findById(activity.getAssId());
+                byId.ifPresent(activityGroup::setAssociation);
+                activityGroups.add(activityGroup);
+            });
+            return activityGroups;
+        } else {
+            byMark.forEach(activity -> {
+                ActivityGroup activityGroup = new ActivityGroup();
+                activityGroup.setActivity(activity);
+                Optional<Association> byId = associationDao.findById(activity.getAssId());
+                byId.ifPresent(activityGroup::setAssociation);
+                activityGroups.add(activityGroup);
+            });
+            return activityGroups;
+        }
+
+    }
+
+    @Override
+    public void reapply(Integer actId) {
+        Optional<Activity> byId = activityDao.findById(actId);
+        if (byId.isPresent()) {
+            byId.get().setMark(0);
+            activityDao.save(byId.get());
+        }
+    }
+
+    @Override
+    public ActivityGroup findOne(Integer id) {
+
+        Optional<Activity> byId = activityDao.findById(id);
+        ActivityGroup activityGroup = new ActivityGroup();
+        if (byId.isPresent()) {
+            activityGroup.setActivity(byId.get());
+            Optional<Association> byId1 = associationDao.findById(byId.get().getAssId());
+            byId1.ifPresent(activityGroup::setAssociation);
+        }
+        return activityGroup;
+    }
+
+    @Override
+    public void delete(Integer id) {
+        Optional<Activity> byId = activityDao.findById(id);
+        if (byId.isPresent()) {
+            //0代表未借用资源，1代表借用资源
+            if (0 == byId.get().getAssetSign()) {
+                //删除活动
+                activityDao.deleteById(id);
+            } else {
+                //查询中间表信息并遍历
+                List<ActAsset> byActId = actAssetDao.findByActId(id);
+                byActId.forEach(actAsset -> {
+                    //获取资产信息
+                    Optional<Asset> byId1 = assetDao.findById(actAsset.getAssetId());
+                    if (byId1.isPresent()) {
+                        //更新数据
+                        byId1.get().setAssetBorrow(byId1.get().getAssetBorrow() - actAsset.getNumber());
+                        byId1.get().setAssetRemain(byId1.get().getAssetRemain() + actAsset.getNumber());
+                        assetDao.save(byId1.get());
+                    }
+                });
+                //删除中间表信息
+                actAssetDao.deleteByActId(id);
+                //删除活动信息
+                activityDao.deleteById(id);
+
+            }
+        }
+    }
+
     /**
-     * 动态条件构建
+     * 活动审核动态条件构建
      *
      * @param searchMap
      * @return
@@ -180,6 +315,34 @@ public class ActivityServiceImpl implements ActivityService {
             }
             predicateList.add(cb.greaterThanOrEqualTo(root.get("startTime"), date));
 
+            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
+
+        };
+
+    }
+
+    /**
+     * 活动列表动态条件构建
+     *
+     * @param searchMap
+     * @return
+     */
+    private Specification<Activity> createSpecification(Map searchMap, List<Integer> integers) {
+
+        return (root, query, cb) -> {
+            List<Predicate> predicateList = new ArrayList<>();
+            //判断integers是不是为null
+            if (!integers.isEmpty()) {
+                //获取数据库中assId的值在integers中的数据
+                CriteriaBuilder.In<Integer> assId = cb.in(root.get("assId"));
+                integers.forEach(assId::value);
+                predicateList.add(assId);
+            }
+            // 活动名称
+            if (searchMap.get("act_name") != null && !"".equals(searchMap.get("act_name"))) {
+                predicateList.add(cb.like(root.get("act_name").as(String.class), "%" + searchMap.get
+                        ("act_name") + "%"));
+            }
             return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
 
         };

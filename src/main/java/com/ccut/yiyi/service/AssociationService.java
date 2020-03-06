@@ -1,6 +1,7 @@
 package com.ccut.yiyi.service;
 
 import com.ccut.yiyi.model.Association;
+import com.ccut.yiyi.model.Student;
 import com.ccut.yiyi.model.group.AssoSimplify;
 import com.ccut.yiyi.model.group.AssociationApply;
 import com.ccut.yiyi.model.group.AssociationGroup;
@@ -35,6 +36,16 @@ public interface AssociationService {
      * @return
      */
     Page<AssociationGroup> findSearch(Map whereMap, int page, int size);
+
+    /**
+     * UI页面查询社团信息
+     *
+     * @param page 页数
+     * @param size 条数
+     * @param id   大类id
+     * @return 返回数据
+     */
+    Page<Association> findSearch(int page, int size, int id);
 
     /**
      * 通过社团类型typeCode查询其下所有社团
@@ -97,4 +108,12 @@ public interface AssociationService {
      * @return 返回数据
      */
     List<AssoSimplify> findAll();
+
+    /**
+     * 查找此社团所有管理人员信息
+     *
+     * @param assId 社团id
+     * @return 返回数据
+     */
+    List<Student> findAllManage(Integer assId);
 }

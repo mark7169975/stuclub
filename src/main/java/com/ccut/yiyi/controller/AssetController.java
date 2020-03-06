@@ -4,6 +4,7 @@ import com.ccut.yiyi.common.PageResult;
 import com.ccut.yiyi.common.Result;
 import com.ccut.yiyi.common.StatusCode;
 import com.ccut.yiyi.model.Asset;
+import com.ccut.yiyi.model.group.AssetGroup;
 import com.ccut.yiyi.service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -59,7 +60,41 @@ public class AssetController {
 
         }
     }
+    /**
+     * 分页+多条件查询
+     *
+     * @param searchMap 查询条件封装
+     * @param page      页码
+     * @param size      页大小
+     * @return 分页结果
+     */
+    @PostMapping("/searchReturn/{page}/{size}")
+    public Result searchReturn(@RequestBody Map searchMap, @PathVariable int page, @PathVariable int size) {
+        try {
+            Page<AssetGroup> pageList = assetService.searchReturn(searchMap, page, size);
+            return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(pageList.getTotalElements(),
+                    pageList.getContent()));
+        } catch (Exception e) {
+            return new Result(false, StatusCode.ERROR, "查询失败");
 
+        }
+    }
+    /**
+     * 资产归还
+     *
+     * @param actId 活动id
+     */
+    @DeleteMapping("assetReturn/{actId}")
+    public Result assetReturn(@PathVariable Integer actId) {
+        try {
+                assetService.assetReturn(actId);
+            return new Result(true, StatusCode.OK, "归还成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, StatusCode.ERROR, e.getMessage());
+        }
+
+    }
     /**
      * 删除资产
      *

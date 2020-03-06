@@ -63,14 +63,76 @@ public class ActivityController {
 
     }
 
-    @PostMapping("changeApproval/{actId}/{mark}")
-    public Result changeApproval(@PathVariable Integer actId,@PathVariable Integer mark){
+    /**
+     * 查询管理员所管理社团的活动列表 分页+多条件查询
+     *
+     * @param searchMap 查询条件封装
+     * @param page      页码
+     * @param rows      页大小
+     * @return 分页结果
+     */
+    @PostMapping("/search/{page}/{rows}/{stuCode}/{role}")
+    public Result findSearch(@PathVariable int page, @PathVariable int rows,
+                             @PathVariable String stuCode, @PathVariable String role, @RequestBody Map searchMap) {
         try {
-            activityService.changeApproval(actId,mark);
-            return  new Result(true,StatusCode.OK,"修改审批状态成功");
-        }catch (Exception e){
+            Page<ActivityGroup> pageList = activityService.findSearch(searchMap, page, rows, stuCode, role);
+            return new Result(true, StatusCode.OK, "查询成功", new PageResult<>(pageList.getTotalElements(), pageList
+                    .getContent()));
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,StatusCode.ERROR,"修改状态失败");
+            return new Result(false, StatusCode.ERROR, "查询失败");
+        }
+
+    }
+
+    @PostMapping("changeApproval/{actId}/{mark}")
+    public Result changeApproval(@PathVariable Integer actId, @PathVariable Integer mark) {
+        try {
+            activityService.changeApproval(actId, mark);
+            return new Result(true, StatusCode.OK, "修改审批状态成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, StatusCode.ERROR, "修改状态失败");
+        }
+    }
+
+    /**
+     * 重新申请活动
+     *
+     * @param actId 活动id
+     */
+    @PostMapping("reapply/{actId}")
+    public Result reapply(@PathVariable Integer actId) {
+        try {
+            activityService.reapply(actId);
+            return new Result(true, StatusCode.OK, "重新申请成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, StatusCode.ERROR, "重新申请失败");
+        }
+    }
+
+    /**
+     * 查询一个活动详细信息
+     * @param id    活动id
+     */
+    @GetMapping("findOne/{id}")
+    public ActivityGroup findOne(@PathVariable Integer id) {
+        return activityService.findOne(id);
+    }
+
+    /**
+     * 通过活动id删除活动信息
+     * @param id    活动id
+     */
+    @DeleteMapping("delete/{id}")
+    public Result delete(@PathVariable Integer id){
+        try {
+            activityService.delete(id);
+            return new Result(true, StatusCode.OK, "删除成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, StatusCode.ERROR, "删除失败");
         }
     }
 

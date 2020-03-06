@@ -48,4 +48,8 @@ public class Activity implements Serializable {
 
     @Column(name = "mark")
     private Integer mark;//审核：0未审核 1通过 2未通过
+
+    @Column(name = "asset_sign")
+    private Integer assetSign;//资产标记 0未借用资产 1借用资产
+
 }

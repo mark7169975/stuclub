@@ -1,6 +1,7 @@
 package com.ccut.yiyi.service;
 
 import com.ccut.yiyi.model.Asset;
+import com.ccut.yiyi.model.group.AssetGroup;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -33,6 +34,16 @@ public interface AssetService {
     Page<Asset> findSearch(Map searchMap, int page, int size);
 
     /**
+     * 归还资产查询数据
+     *
+     * @param searchMap 条件
+     * @param page      页码
+     * @param size      条数
+     * @return 返回数据
+     */
+    Page<AssetGroup> searchReturn(Map searchMap, int page, int size);
+
+    /**
      * 通过资产id删除资产
      *
      * @param id 资产id
@@ -56,7 +67,14 @@ public interface AssetService {
 
     /**
      * 查询所有有资源的资产
+     *
      * @return 返回数据
      */
     List<Asset> findAll();
+
+    /**
+     * 资产归还
+     * @param actId 活动id
+     */
+    void assetReturn(Integer actId);
 }

@@ -25,6 +25,11 @@
 
     <script src="../../plugins/angularjs/angular.min.js"></script>
 
+    <!-- Latest jQuery -->
+    <script src="../../assets/js/jquery-1.12.4.min.js"></script>
+    <!-- scripts js -->
+    <script src="../../js/plugins/scripts.js"></script>
+
     <!--分割线-->
     <!-- 分页组件开始 -->
     <script src="../../plugins/angularjs/pagination.js"></script>
@@ -47,7 +52,11 @@
 
 <!-- 内容头部 -->
 <!-- 内容头部 /-->
-
+<div id="preloader">
+    <span class="spinner"></span>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>
 <!-- 正文区域 -->
 <section class="content-header">
     <h1>
@@ -105,10 +114,10 @@
                                 <td class="text-center"> {{po.assetUnit}}</td>
                                 <td class="text-center"> {{po.assetSite}}</td>
                                 <td class="text-center">
-                                    <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
+                                    <button type="button" class="btn btn-warning btn-flat btn-xs" data-toggle="modal"
                                             data-target="#editModal" ng-click="findOne(po.assetId)">编辑
                                     </button>
-                                    <button type="button" class="btn bg-olive btn-xs"
+                                    <button type="button" class="btn btn-danger btn-xs"
                                             ng-click="dele(po.assetId)">
                                         删除
                                     </button>

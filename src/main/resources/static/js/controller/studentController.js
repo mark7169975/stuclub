@@ -1,5 +1,5 @@
 //控制层
-app.controller('studentController', function ($scope, $controller, studentService, roleService, typeService, associationService) {
+app.controller('studentController', function ($scope, $controller, studentService, roleService, typeService, associationService, loginService) {
 
     $controller('baseController', {$scope: $scope});//继承
 
@@ -75,24 +75,52 @@ app.controller('studentController', function ($scope, $controller, studentServic
                 $scope.typeList = response;
             }
         );
-    }
+    };
+    $scope.loginMess = {};
+    //查询登录人的信息
+    $scope.queryLoginMess = function () {
+        loginService.loginName().success(
+            function (response) {
+                $scope.loginMess = response;
+                $scope.typeCode=1000;
+            }
+        );
+    };
     $scope.entity = {"stuRole": {}};
     //监视typeCode的改变查询社团类型下的所有社团
     $scope.$watch('typeCode', function (newValue, oldValue) {
-        //调用associationService的方法
-        associationService.findByTypeCode(newValue == null ? 1000 : newValue).success(
-            function (response) {
-                $scope.AssList = response;
-                //把查询到的社团第一个值赋值给assoId
-                $scope.entity.stuRole.assoId = $scope.AssList[0].assId;
-                //把社团id赋值给assoId，然后自动加载查询
-                $scope.assoId = $scope.entity.stuRole.assoId;
-                //如果在查询学生页面，则aaa得值就会被赋为1，否则为0
-                if ($scope.aaa === 1) {
-                    $scope.reloadList();//加载查询数据
+        if ($scope.loginMess.loginRole === 'ROLE_ADMIN') {
+            associationService.findByStuCodeAndRole($scope.loginMess.loginStuCode, $scope.loginMess.loginRole).success(
+                function (response) {
+                    $scope.AssList = response;
+                    //把查询到的社团第一个值赋值给assoId
+                    $scope.entity.stuRole.assoId = $scope.AssList[0].assId;
+                    //把社团id赋值给assoId，然后自动加载查询
+                    $scope.assoId = $scope.entity.stuRole.assoId;
+                    //如果在查询学生页面，则aaa得值就会被赋为1，否则为0
+                    if ($scope.aaa === 1) {
+                        $scope.reloadList();//加载查询数据
+                    }
                 }
-            }
-        );
+            )
+        }
+        //判断登录人是否为超级管理员
+        if ($scope.loginMess.loginRole === 'ROLE_SUPERADMIN') {
+            //调用associationService的方法
+            associationService.findByTypeCode(newValue == null ? 1000 : newValue).success(
+                function (response) {
+                    $scope.AssList = response;
+                    //把查询到的社团第一个值赋值给assoId
+                    $scope.entity.stuRole.assoId = $scope.AssList[0].assId;
+                    //把社团id赋值给assoId，然后自动加载查询
+                    $scope.assoId = $scope.entity.stuRole.assoId;
+                    //如果在查询学生页面，则aaa得值就会被赋为1，否则为0
+                    if ($scope.aaa === 1) {
+                        $scope.reloadList();//加载查询数据
+                    }
+                }
+            );
+        }
     });
     //监控assoId的变化情况
     $scope.$watch('entity.stuRole.assoId', function (newValue, oldValue) {
@@ -138,9 +166,9 @@ app.controller('studentController', function ($scope, $controller, studentServic
     };
 
     //设置和取消管理人员
-    $scope.setManage = function (stuCode,assId,sign) {
+    $scope.setManage = function (stuCode, assId, sign) {
         if (confirm("确定修改吗?") === true) {
-            studentService.setManage(stuCode,assId,sign).success(
+            studentService.setManage(stuCode, assId, sign).success(
                 function (response) {
                     if (response.success) {
                         alert(response.message);

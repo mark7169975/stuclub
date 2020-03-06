@@ -56,8 +56,19 @@ public interface StuRoleDao extends JpaRepository<StuRole, Integer>, JpaSpecific
 
     /**
      * 查询学号为stuCode，角色不为roleCode的信息
-     * @param stuCode   学号
-     * @param roleCode  角色编号
+     *
+     * @param stuCode  学号
+     * @param roleCode 角色编号
+     * @return 返回数据
      */
     List<StuRole> findByStuCodeAndRoleCodeNot(String stuCode, Integer roleCode);
+
+    /**
+     * 查询此社团所有管理人员
+     *
+     * @param roleCode 角色
+     * @param assId    社团id
+     * @return 返回数据
+     */
+    List<StuRole> findByRoleCodeAndAssoId(Integer roleCode, Integer assId);
 }

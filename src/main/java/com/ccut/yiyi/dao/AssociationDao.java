@@ -1,6 +1,8 @@
 package com.ccut.yiyi.dao;
 
 import com.ccut.yiyi.model.Association;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -39,4 +41,5 @@ public interface AssociationDao extends JpaRepository<Association, Integer>, Jpa
      */
     List<Association> findByStuCode(String stuCode);
 
+    Page<Association> findByTypeCode(Integer typeCode, Pageable pageable);
 }

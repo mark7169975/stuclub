@@ -1,5 +1,5 @@
 //控制层
-app.controller('associationController', function ($scope, $controller, associationService, typeService) {
+app.controller('associationController', function ($scope, $controller, associationService, typeService, loginService) {
 
     $controller('baseController', {$scope: $scope});//继承
 
@@ -31,6 +31,14 @@ app.controller('associationController', function ($scope, $controller, associati
             }
         );
     }
+    //查询登录人的信息
+    $scope.queryLoginMess = function () {
+        loginService.loginName().success(
+            function (response) {
+                $scope.loginMess = response;
+            }
+        );
+    };
     //查询一个社团详情
     $scope.findOne = function (id) {
         //查看社团详情时，showOrEdit为true是只读
@@ -143,6 +151,7 @@ app.controller('associationController', function ($scope, $controller, associati
 
     //查询所有社团，默认搜索数据为null
     $scope.search = function (page, rows) {
+        $scope.queryLoginMess();
         associationService.search(page, rows, $scope.searchEntity).success(
             function (response) {
                 $scope.list = response.data.rows;

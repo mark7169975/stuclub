@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>归还资产</title>
+
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="../../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../../plugins/datepicker/datepicker3.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <script src="../../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="../../plugins/select2/select2.css"/>
+    <link rel="stylesheet" href="../../plugins/select2/select2-bootstrap.css"/>
+
+    <script src="../../plugins/angularjs/angular.min.js"></script>
+
+    <!-- Latest jQuery -->
+    <script src="../../assets/js/jquery-1.12.4.min.js"></script>
+    <!-- scripts js -->
+    <script src="../../js/plugins/scripts.js"></script>
+
+    <!--分割线-->
+    <!-- 分页组件开始 -->
+    <script src="../../plugins/angularjs/pagination.js"></script>
+    <link rel="stylesheet" href="../../plugins/angularjs/pagination.css">
+    <!-- 分页组件结束 -->
+    <script type="text/javascript" src="../../js/base_pagination.js"></script>
+    <script type="text/javascript" src="../../js/service/assetService.js"></script>
+
+    <script type="text/javascript" src="../../js/controller/baseController.js"></script>
+    <script type="text/javascript" src="../../js/controller/assetReturnController.js"></script>
+</head>
+
+<body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="assetReturnController">
+
+<!-- 内容区域 -->
+<!-- @@master = admin-layout.html-->
+<!-- @@block = content -->
+
+<!-- 内容头部 -->
+<!-- 内容头部 /-->
+<div id="preloader">
+    <span class="spinner"></span>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>
+<!-- 正文区域 -->
+<section class="content-header">
+    <h1>
+        资产归还列表
+    </h1>
+
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <div class="box-title with-border">
+                        归还信息
+                    </div>
+                    <div class="box-tools pull-right">
+
+                        <div class="input-group input-group-sm" style="width: 200px;">
+                            <input type="text" name="table_search" class="form-control pull-right"
+                                   ng-model="searchEntity.search" placeholder="活动名称"/>
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-default" ng-click="reloadList()"><i
+                                        class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <table id="asset-table" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <td class="text-center"> 社团名称</td>
+                                <td class="text-center"> 活动名称</td>
+                                <td class="text-center"> 活动时间</td>
+                                <td class="text-center"> 操作</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in list">
+                                <td class="text-center"> {{x.association.assName}}</td>
+                                <td class="text-center"> {{x.activity.actName}}</td>
+                                <td class="text-center">{{x.activity.startTime}} </td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-warning btn-flat btn-xs" data-toggle="modal"
+                                            data-target="#editModal" ng-click="findOne(x.assetLeaseInfoList)">租借信息
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-xs"
+                                            ng-click="assetReturn(x.activity.actId)">
+                                        资产归还
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- 分页 -->
+                <tm-pagination conf="paginationConf"></tm-pagination>
+                <!-- 分页 -->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- 正文区域 /-->
+
+<!-- @@close -->
+<!-- 内容区域 /-->
+<!--编辑窗口-->
+
+<div class="modal fade" id="editModal" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"  aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    租借信息
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="row margin-bottom" ng-repeat="a in assetInfo">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <span class="input-group-addon">{{a.name}}{{a.number}}{{a.unit}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"   data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    确定
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+</html>

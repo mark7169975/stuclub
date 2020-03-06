@@ -4,6 +4,7 @@ import com.ccut.yiyi.model.Notice;
 import com.ccut.yiyi.model.group.NoticeGroup;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +36,15 @@ public interface NoticeService {
     Page<NoticeGroup> findSearch(Map searchMap, int page, int rows, String stuCode, String role);
 
     /**
+     * UI页面分页查询公告信息
+     *
+     * @param page 页码
+     * @param rows 条数
+     * @return  返回数据
+     */
+    Page<NoticeGroup> findSearch(int page, int rows);
+
+    /**
      * 通过公告id查询一个公告详情
      *
      * @param id 公告id
@@ -56,4 +66,12 @@ public interface NoticeService {
      * @param notId 公告id
      */
     void delete(Integer notId);
+
+    /**
+     * UI首页查询6个公告信息
+     *
+     * @return 返回数据
+     */
+    List<NoticeGroup> findAll();
+
 }

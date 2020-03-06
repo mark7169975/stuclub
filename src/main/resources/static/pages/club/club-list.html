@@ -45,6 +45,8 @@
     <script src="../../plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script src="../../plugins/jQueryUI/jquery-ui.min.js"></script>
     <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- scripts js -->
+    <script src="../../js/plugins/scripts.js"></script>
     <!--分割线-->
     <script type="text/javascript" src="../../plugins/angularjs/angular.min.js"></script>
     <script src="../../plugins/select2/select2.min.js" type="text/javascript"></script>
@@ -59,6 +61,7 @@
 
     <script type="text/javascript" src="../../js/service/associationService.js"></script>
     <script type="text/javascript" src="../../js/service/typeService.js"></script>
+    <script type="text/javascript" src="../../js/service/loginService.js"></script>
 
     <script type="text/javascript" src="../../js/controller/baseController.js"></script>
     <script type="text/javascript" src="../../js/controller/associationController.js"></script>
@@ -68,7 +71,11 @@
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="associationController">
-
+<div id="preloader">
+    <span class="spinner"></span>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>
 
 <!-- 正文区域 -->
 <section class="content-header">
@@ -120,23 +127,25 @@
                     </thead>
                     <tbody>
 
-                    <tr ng-repeat="entity in list"  ng-cloak>
+                    <tr ng-repeat="entity in list" ng-cloak>
                         <td class="text-center">{{entity.association.assName}}</td>
                         <td class="text-center">{{entity.student.stuName}}</td>
                         <td class="text-center">{{entity.associationType.typeName}}</td>
                         <td class="text-center">
-                            <button type="button" class="btn bg-olive btn-xs"
+                            <button type="button" class="btn bg-aqua btn-xs color-palette"
                                     data-toggle="modal" ng-click="findOneAss(entity.association.assId)"
-                                    data-target="#change">换届
+                                    data-target="#change" ng-if="loginMess.loginRole=='ROLE_SUPERADMIN'">换届
                             </button>
                             <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
                                     data-target="#editModal" ng-click="findOne(entity.association.assId)">详情
                             </button>
-                            <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
-                                    data-target="#editModal" ng-click="changeEdit(entity.association.assId)">编辑
+                            <button type="button" class="btn btn-warning btn-flat btn-xs" data-toggle="modal"
+                                    data-target="#editModal" ng-click="changeEdit(entity.association.assId)"
+                                    ng-if="loginMess.loginRole=='ROLE_SUPERADMIN'">编辑
                             </button>
-                            <button type="button" class="btn bg-olive btn-xs"
-                                    ng-click="dele(entity.association.assId,entity.association.stuCode)">
+                            <button type="button" class="btn btn-danger btn-xs"
+                                    ng-click="dele(entity.association.assId,entity.association.stuCode)"
+                                    ng-if="loginMess.loginRole=='ROLE_SUPERADMIN'">
                                 删除
                             </button>
                         </td>

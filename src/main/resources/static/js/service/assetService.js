@@ -29,4 +29,12 @@ app.service('assetService',function($http){
 	this.search=function(page,rows,searchEntity){
 		return $http.post('/asset/search/'+page+'/'+rows, searchEntity);
 	};
+    //查询资产归还，默认搜索条件为null
+    this.searchReturn=function(page,rows,searchEntity){
+        return $http.post('/asset/searchReturn/'+page+'/'+rows, searchEntity);
+    };
+    //资产归还
+	this.assetReturn=function (actId) {
+		return $http.delete('/asset/assetReturn/'+actId);
+    }
 });

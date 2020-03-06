@@ -18,6 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -231,8 +232,18 @@ public class StudentServiceImpl implements StudentService {
                     predicateList.add(cb.like(root.get("stuCode").as(String.class), "%" + searchMap.get
                             ("search") + "%"));
                 } else {
-                    //通过姓名查询未完成
-                    List<StuRole> byAssoId = stuRoleDao.findByAssoId(assoId);
+                    //查询学生相似信息
+                    List<Student> search = studentDao.findByStuNameLike("%" + searchMap.get("search") + "%");
+                    //提取学号放入集合中
+                    ArrayList<String> strings = new ArrayList<>();
+                    search.forEach(student -> strings.add(student.getStuCode()));
+                    //判断集合是否为null
+                    if (!strings.isEmpty()) {
+                        //添加查询条件
+                        CriteriaBuilder.In<String> stuCode = cb.in(root.get("stuCode"));
+                        strings.forEach(stuCode::value);
+                        predicateList.add(stuCode);
+                    }
                 }
             }
             return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));

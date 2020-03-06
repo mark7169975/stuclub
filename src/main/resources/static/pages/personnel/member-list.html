@@ -41,7 +41,10 @@
     <link rel="stylesheet" href="../../plugins/ionslider/ion.rangeSlider.skinNice.css">
     <link rel="stylesheet" href="../../plugins/bootstrap-slider/slider.css">
 
-
+    <!-- Latest jQuery -->
+    <script src="../../assets/js/jquery-1.12.4.min.js"></script>
+    <!-- scripts js -->
+    <script src="../../js/plugins/scripts.js"></script>
     <!--分割线-->
     <script type="text/javascript" src="../../plugins/angularjs/angular.min.js"></script>
 
@@ -55,6 +58,7 @@
     <script type="text/javascript" src="../../js/service/roleService.js"></script>
     <script type="text/javascript" src="../../js/service/typeService.js"></script>
     <script type="text/javascript" src="../../js/service/associationService.js"></script>
+    <script type="text/javascript" src="../../js/service/loginService.js"></script>
 
     <script type="text/javascript" src="../../js/controller/baseController.js"></script>
     <script type="text/javascript" src="../../js/controller/studentController.js"></script>
@@ -64,7 +68,7 @@
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="studentController"
-      ng-init="findAllType()">
+      ng-init="queryLoginMess();findAllType()">
 
 <!-- 内容区域 -->
 <!-- @@master = admin-layout.html-->
@@ -72,11 +76,17 @@
 
 <!-- 内容头部 -->
 <!-- 内容头部 /-->
-
+<!-- LOADER -->
+<div id="preloader">
+    <span class="spinner"></span>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>
+<!-- END LOADER -->
 <!-- 正文区域 -->
 <section class="content-header">
     <h1>
-        成员列表 {{entity}}{{assoId}}
+        成员列表 {{entity}}{{assoId}}{{typeCode}}
     </h1>
 
 </section>
@@ -91,12 +101,12 @@
             <div class="table-box">
 
                 <!--工具栏-->
-                <div class="box-tools pull-left">
+                <div class="box-tools pull-left" ng-show="loginMess.loginRole=='ROLE_SUPERADMIN'">
                     <div class="form-group form-inline">
                         <div class="btn-group">
                             <div class="row data-type">
                                 <label class="control-label">社团类型: </label>
-                                <select class="select2 form-control" ng-init="typeCode = 1000" ng-model="typeCode"
+                                <select class="select2 form-control"  ng-model="typeCode"
                                         ng-options="t.typeCode as t.typeName for t in typeList">
                                 </select>
                                 <label class="control-label">社团: </label>
@@ -107,10 +117,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="box-tools pull-left" ng-show="loginMess.loginRole=='ROLE_ADMIN'">
+                    <div class="form-group form-inline">
+                        <div class="btn-group">
+                            <div class="row data-type">
+                                <label class="control-label">管理的社团: </label>
+                                <select class="select2 form-control" ng-model="entity.stuRole.assoId"
+                                        ng-options="x.assId as x.assName for x in AssList">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="box-tools pull-right">
                     <div class="input-group input-group-sm" style="width: 200px;">
                         <input type="text" name="table_search" class="form-control pull-right"
-                               ng-model="searchEntity.search" placeholder="学号"/>
+                               ng-model="searchEntity.search" placeholder="学号或姓名"/>
                         <div class="input-group-btn">
                             <button type="submit" class="btn btn-default" ng-click="reloadList()"><i
                                     class="fa fa-search"></i></button>
@@ -123,7 +145,6 @@
                 <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
                     <thead>
                     <tr>
-
                         <th class="text-center">学号</th>
                         <th class="text-center">姓名</th>
                         <th class="text-center">性别</th>
@@ -147,10 +168,11 @@
                                 <span ng-repeat="p in AssList">
                                     <span ng-if="p.assId == assoId">
                                         <span ng-if="p.stuCode == pojo.student.stuCode">
-                                            社团社长
+                                            <span class="label label-primary">社团社长</span>
+
                                         </span>
                                         <span ng-if="p.stuCode != pojo.student.stuCode">
-                                            <button type="button" class="btn bg-gray btn-xs color-palette"
+                                            <button type="button" class="btn btn-danger btn-xs"
                                                     ng-click="setManage(pojo.student.stuCode,assoId,0)">取消管理
                                             </button>
                                         </span>
@@ -171,7 +193,7 @@
                             <button type="button" class="btn bg-olive btn-xs" data-toggle="modal"
                                     data-target="#editModal" ng-click="changeEdit(pojo.student.stuId)">编辑
                             </button>
-                            <button type="button" class="btn bg-olive btn-xs"
+                            <button type="button" class="btn btn-danger btn-xs"
                                     ng-click="dele(pojo.student.stuId,assoId)">删除
                             </button>
                         </td>

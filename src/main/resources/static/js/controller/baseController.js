@@ -11,6 +11,11 @@ app.controller('baseController' ,function($scope){
         //切换页码
         $scope.search( $scope.paginationConfByTime.currentPage, $scope.paginationConfByTime.itemsPerPage);
     }
+    //重新加载列表 数据
+    $scope.reloadListByUi=function(){
+        //切换页码
+        $scope.search( $scope.paginationConfByUi.currentPage, $scope.paginationConfByUi.itemsPerPage);
+    }
     $scope.reload=function(){
         //切换页码
         $scope.search(window.location.reload(true));
@@ -34,6 +39,16 @@ app.controller('baseController' ,function($scope){
         perPageOptions: [5, 10, 20, 40, 80],
         onChange: function(){
             $scope.reloadListByTime();//重新加载
+        }
+    };
+    //UI页面分页控制配置
+    $scope.paginationConfByUi = {
+        currentPage: 1,
+        totalItems: 9,
+        itemsPerPage: 9,
+        perPageOptions: [9, 18, 36, 72,144],
+        onChange: function(){
+            $scope.reloadListByUi();//重新加载
         }
     };
     $scope.selectIds=[];//选中的ID集合

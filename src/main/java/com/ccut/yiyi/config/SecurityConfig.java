@@ -39,8 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()//permitAll()表示上面这些不需要验证
                 .and()
                 .authorizeRequests().antMatchers("/css/**", "/img/**", "/js/**",
-                "/plugins/**","/queryErrorMess")
-                .permitAll()//设置静态资源可以访问
+                "/plugins/**","/queryErrorMess","/assets/**","/pages/ui/**","/ui/**")
+                .permitAll()//设置以上资源可以访问
                 .and()
                 .authorizeRequests()
                 .antMatchers("/**").hasAnyRole("ADMIN","SUPERADMIN")

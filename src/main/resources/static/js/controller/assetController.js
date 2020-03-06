@@ -1,5 +1,5 @@
 //控制层
-app.controller('assetController', function ($scope, $controller, assetService) {
+app.controller('assetController', function ($scope, $location, $controller, assetService) {
 
     $controller('baseController', {$scope: $scope});//继承
 
@@ -63,7 +63,7 @@ app.controller('assetController', function ($scope, $controller, assetService) {
                             if (response.success) {
                                 alert(response.message);
                                 $scope.reloadList();//刷新列表
-                            }else {
+                            } else {
                                 alert(response.message);
                             }
                         }
@@ -76,6 +76,7 @@ app.controller('assetController', function ($scope, $controller, assetService) {
     $scope.searchEntity = {};//定义搜索对象
     //搜索
     $scope.search = function (page, rows) {
+        //如果sign为0 代表在查询资产列表页面
         assetService.search(page, rows, $scope.searchEntity).success(
             function (response) {
                 $scope.list = response.data.rows;

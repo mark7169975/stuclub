@@ -66,6 +66,18 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
+    public Page<NoticeGroup> findSearch(int page, int rows) {
+        PageRequest pageRequest = PageRequest.of(page - 1, rows, Sort.Direction.DESC, "createTime");
+        return noticeDao.findAll(pageRequest).map(notice -> {
+            NoticeGroup noticeGroup = new NoticeGroup();
+            noticeGroup.setNotice(notice);
+            Optional<Association> byId = associationDao.findById(notice.getAssId());
+            byId.ifPresent(noticeGroup::setAssociation);
+            return noticeGroup;
+        });
+    }
+
+    @Override
     public Notice findOne(Integer id) {
         //通过公告id查询数据库信息
         Optional<Notice> byId = noticeDao.findById(id);
@@ -88,6 +100,38 @@ public class NoticeServiceImpl implements NoticeService {
         Optional<Notice> byId = noticeDao.findById(notId);
         //判断是否为null，不为null则删除
         byId.ifPresent(notice -> noticeDao.delete(notice));
+
+    }
+
+    /**
+     * UI首页获取6个公告信息
+     */
+    @Override
+    public List<NoticeGroup> findAll() {
+        List<Notice> all = noticeDao.findAll();
+        all.sort((o1, o2) -> Math.toIntExact((o2.getCreateTime().getTime() - o1.getCreateTime().getTime())));
+        ArrayList<NoticeGroup> noticeGroups = new ArrayList<>();
+
+        if (all.size() > 6) {
+            List<Notice> notices = all.subList(0, 6);
+            notices.forEach(notice -> {
+                NoticeGroup noticeGroup = new NoticeGroup();
+                noticeGroup.setNotice(notice);
+                Optional<Association> byId = associationDao.findById(notice.getAssId());
+                byId.ifPresent(noticeGroup::setAssociation);
+                noticeGroups.add(noticeGroup);
+            });
+            return noticeGroups;
+        } else {
+            all.forEach(notice -> {
+                NoticeGroup noticeGroup = new NoticeGroup();
+                noticeGroup.setNotice(notice);
+                Optional<Association> byId = associationDao.findById(notice.getAssId());
+                byId.ifPresent(noticeGroup::setAssociation);
+                noticeGroups.add(noticeGroup);
+            });
+            return noticeGroups;
+        }
 
     }
 

@@ -102,6 +102,13 @@ public class AssociationServiceImpl implements AssociationService {
         });
     }
 
+    @Override
+    public Page<Association> findSearch(int page, int size, int id) {
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        return associationDao.findByTypeCode(id, pageRequest);
+
+    }
+
     /**
      * 通过社团类型的typeCode查询其下所有社团
      *
@@ -266,6 +273,15 @@ public class AssociationServiceImpl implements AssociationService {
         //排序
         assoSimplifies.sort(Comparator.comparingInt(o -> o.getText().charAt(0)));
         return assoSimplifies;
+    }
+
+    @Override
+    public List<Student> findAllManage(Integer assId) {
+        List<StuRole> byRoleCodeAndAssoId = stuRoleDao.findByRoleCodeAndAssoId(2001, assId);
+
+        ArrayList<Student> students = new ArrayList<>();
+        byRoleCodeAndAssoId.forEach(stuRole -> students.add(studentDao.findByStuCode(stuRole.getStuCode())));
+        return students;
     }
 
     /**

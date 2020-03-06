@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="Anil z" name="author">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Eduglobal - Education & Courses HTML Template">
+    <meta name="keywords"
+          content="academy, course, education, elearning, learning, education html template, university template, college template, school template, online education template, tution center template">
+
+    <!-- SITE TITLE -->
+    <title>工大学生社团</title>
+    <!-- Favicon Icon -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../assets/images/favicon.png">
+    <!-- Animation CSS -->
+    <link rel="stylesheet" href="../../assets/css/animate.css"/>
+    <!-- Latest Bootstrap min CSS -->
+    <link rel="stylesheet" href="http://cdn.bootstrapmb.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i"
+          rel="stylesheet"/>
+    <!-- Icon Font CSS -->
+    <link rel="stylesheet" href="../../assets/css/ionicons.min.css"/>
+    <link rel="stylesheet" href="../../assets/css/themify-icons.css"/>
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="../../assets/css/all.min.css"/>
+    <!--- owl carousel CSS-->
+    <link rel="stylesheet" href="../../assets/owlcarousel/css/owl.carousel.min.css"/>
+    <link rel="stylesheet" href="../../assets/owlcarousel/css/owl.theme.css"/>
+    <link rel="stylesheet" href="../../assets/owlcarousel/css/owl.theme.default.min.css"/>
+    <!-- Magnific Popup CSS -->
+    <link rel="stylesheet" href="../../assets/css/magnific-popup.css"/>
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="../../assets/css/style.css"/>
+    <link rel="stylesheet" href="../../assets/css/responsive.css"/>
+    <link rel="stylesheet" id="layoutstyle" href="../../assets/color/theme.css"/>
+
+    <script>
+        var sc_project = 11981757;
+        var sc_invisible = 1;
+        var sc_security = "35d2687e";
+        var sc_https = 1;
+    </script>
+    <!--分割线-->
+    <script type="text/javascript" src="../../plugins/angularjs/angular.min.js"></script>
+
+    <script type="text/javascript" src="../../js/base.js"></script>
+    <script type="text/javascript" src="../../js/service/ui/uiIndexService.js"></script>
+
+    <script type="text/javascript" src="../../js/controller/baseController.js"></script>
+    <script type="text/javascript" src="../../js/controller/ui/uiIndexController.js"></script>
+</head>
+
+<body  ng-app="stuclub" ng-controller="uiIndexController" ng-init="findAllNotice();findAllActivity()">
+
+<!-- LOADER -->
+<div id="preloader">
+    <span class="spinner"></span>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>
+<!-- END LOADER -->
+<div id="head"></div>
+<!-- START SECTION   -->
+<section class="banner_section p-0 full_screen">
+    <div id="carouselExampleFade" class="banner_content_wrap carousel slide carousel-fade" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active background_bg overlay_bg_40"
+                 data-img-src="../../assets/images/banner1.jpg">
+                <div class="banner_slide_content">
+                    <div class="container"><!-- STRART CONTAINER -->
+                        <div class="row justify-content-center">
+                            <div class="col-lg-9 col-sm-12 text-center">
+                                <div class="banner_content animation text_white" data-animation="fadeIn"
+                                     data-animation-delay="0.8s">
+                                    <h2 class="font-weight-bold animation text-uppercase" data-animation="fadeInDown"
+                                        data-animation-delay="1s">Welcome To 工大学生社团</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- END CONTAINER-->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- END SECTION BANNER -->
+
+<!-- START   公告 -->
+<section class="small_pt">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-8">
+                <div class="text-center animation" data-animation="fadeInUp" data-animation-delay="0.01s">
+                    <div class="heading_s1 text-center">
+                        <h2>社团公告</h2>
+                    </div>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-sm-6" ng-repeat="p1 in noticeList">
+                <div class="content_box radius_all_10 box_shadow1 animation" data-animation="fadeInUp"
+                     data-animation-delay="0.02s">
+                    <div class="content_desc">
+                        <h4 class="content_title">{{p1.notice.notTitle}}</h4>
+                        <p>{{p1.notice.notContent}}</p>
+                    </div>
+                    <div class="content_footer">
+                        <div class="teacher">
+                            <a href="club-mess.html#?assId={{p1.association.assId}}"><img src="../../assets/images/user1.jpg" alt="user1"><span>{{p1.association.assName}}</span></a>
+                        </div>
+                        <div>
+                            <ul class="list_none blog_meta">
+                                <li><i class="ion-calendar"></i>{{p1.notice.createTime |date:'yyyy/MM/dd'}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center animation" data-animation="fadeInUp" data-animation-delay="0.07s">
+                    <div class="medium_divider"></div>
+                    <a href="notice-list.html" class="btn btn-default">显示所有公告 <i
+                            class="ion-ios-arrow-thin-right ml-1"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- END  公告 -->
+<!-- START  活动 -->
+<section class="small_pt">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-8">
+                <div class="text-center animation" data-animation="fadeInUp" data-animation-delay="0.01s">
+                    <div class="heading_s1 text-center">
+                        <h2>社团活动</h2>
+                    </div>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-sm-6" ng-repeat="p2 in ActivityList">
+                <div class="content_box radius_all_10 box_shadow1 animation" data-animation="fadeInUp"
+                     data-animation-delay="0.02s">
+                    <div class="content_img radius_ltrt_10">
+                        <img src="../../assets/images/course_img1.jpg" alt="course_img1"/>
+                    </div>
+                    <div class="content_desc">
+                        <h4 class="content_title">{{p2.activity.actName}}</h4>
+                        <p>活动简介:{{p2.activity.actDescription}}</p>
+                        <p>活动地点:{{p2.activity.actAddress}}</p>
+                    </div>
+                    <div class="content_footer">
+                        <div class="teacher">
+                            <a href="club-mess.html#?assId={{p2.association.assId}}"><img src="../../assets/images/user1.jpg" alt="user1"><span>{{p2.association.assName}}</span></a>
+                        </div>
+                        <div>
+                            <ul class="list_none blog_meta">
+                                <li><i class="ion-calendar"></i>{{p2.activity.startTime}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center animation" data-animation="fadeInUp" data-animation-delay="0.07s">
+                    <div class="medium_divider"></div>
+                    <a href="activity-list.html" class="btn btn-default">显示所有活动<i
+                            class="ion-ios-arrow-thin-right ml-1"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- END  活动 -->
+<!-- START FOOTER -->
+<div id="footer"></div>
+<!-- END FOOTER -->
+
+<a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a>
+
+<!-- Latest jQuery -->
+<script src="../../assets/js/jquery-1.12.4.min.js"></script>
+<!-- jquery-ui -->
+<script src="../../assets/js/jquery-ui.js"></script>
+<!-- popper min js -->
+<script src="../../assets/js/popper.min.js"></script>
+<!-- Latest compiled and minified Bootstrap -->
+<script src="http://cdn.bootstrapmb.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- owl-carousel min js  -->
+<script src="../../assets/owlcarousel/js/owl.carousel.min.js"></script>
+<!-- magnific-popup min js  -->
+<script src="../../assets/js/magnific-popup.min.js"></script>
+<!-- waypoints min js  -->
+<script src="../../assets/js/waypoints.min.js"></script>
+<!-- parallax js  -->
+<script src="../../assets/js/parallax.js"></script>
+<!-- countdown js  -->
+<script src="../../assets/js/jquery.countdown.min.js"></script>
+<!-- jquery.counterup.min js -->
+<script src="../../assets/js/jquery.counterup.min.js"></script>
+<!-- imagesloaded js -->
+<script src="../../assets/js/imagesloaded.pkgd.min.js"></script>
+<!-- isotope min js -->
+<script src="../../assets/js/isotope.min.js"></script>
+<!-- jquery.parallax-scroll js -->
+<script src="../../assets/js/jquery.parallax-scroll.js"></script>
+<!-- scripts js -->
+<script src="../../assets/js/scripts.js"></script>
+<script>
+    $("#head").load("head.html");
+    $("#footer").load("footer.html");
+</script>
+</body>
+</html>

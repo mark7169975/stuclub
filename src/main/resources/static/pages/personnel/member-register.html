@@ -32,7 +32,10 @@
     <link rel="stylesheet" href="../../plugins/ionslider/ion.rangeSlider.skinNice.css">
     <link rel="stylesheet" href="../../plugins/bootstrap-slider/slider.css">
 
-
+    <!-- Latest jQuery -->
+    <script src="../../assets/js/jquery-1.12.4.min.js"></script>
+    <!-- scripts js -->
+    <script src="../../js/plugins/scripts.js"></script>
     <!--分割线-->
     <script type="text/javascript" src="../../plugins/angularjs/angular.min.js"></script>
 
@@ -42,6 +45,7 @@
     <script type="text/javascript" src="../../js/service/roleService.js"></script>
     <script type="text/javascript" src="../../js/service/typeService.js"></script>
     <script type="text/javascript" src="../../js/service/associationService.js"></script>
+    <script type="text/javascript" src="../../js/service/loginService.js"></script>
 
     <script type="text/javascript" src="../../js/controller/baseController.js"></script>
     <script type="text/javascript" src="../../js/controller/studentController.js"></script>
@@ -51,7 +55,7 @@
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="studentController"
-      ng-init="findAllRole();findAllType()">
+      ng-init="queryLoginMess();findAllRole();findAllType()">
 
 <!-- 内容区域 -->
 <!-- @@master = admin-layout.html-->
@@ -59,7 +63,11 @@
 
 <!-- 内容头部 -->
 <!-- 内容头部 /-->
-
+<div id="preloader">
+    <span class="spinner"></span>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>
 <!-- 正文区域 -->
 <section class="content-header">
     <h1>
@@ -180,8 +188,8 @@
                             <div class="row form-group">
                                 <div class="col-md-8">
                                     <label class="control-label">社团: </label>
-                                    <select class="select2 form-control" ng-init="typeCode = 1000" ng-model="typeCode"
-                                            ng-options="t.typeCode as t.typeName for t in typeList">
+                                    <select class="select2 form-control"  ng-model="typeCode"
+                                            ng-options="t.typeCode as t.typeName for t in typeList" ng-show="loginMess.loginRole=='ROLE_SUPERADMIN'">
                                     </select>
                                     <select class="select2 form-control" ng-model="entity.stuRole.assoId"
                                             ng-options="x.assId as x.assName for x in AssList">

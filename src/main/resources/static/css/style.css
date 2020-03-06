@@ -9,6 +9,104 @@
     color: #fff;
 	
 }
+/*Loader Css*/
+#preloader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: #fff;
+	z-index: 999999;
+}
+.spinner, .spinner-small {
+	height: 45px;
+	width: 45px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -20px 0 0 -20px;
+	border: 2px solid #000000;
+	border-top: 2px solid #FFBC09;
+	border-radius: 100%;
+	-webkit-animation: rotation .6s infinite linear;
+	-moz-animation: rotation .6s infinite linear;
+	-o-animation: rotation .6s infinite linear;
+	animation: rotation .6s infinite linear;
+	z-index: 9999;
+}
+@-webkit-keyframes rotation {
+	from {
+		-webkit-transform:rotate(0)
+	}
+	to {
+		-webkit-transform:rotate(359deg)
+	}
+}
+@-moz-keyframes rotation {
+	from {
+		-moz-transform:rotate(0)
+	}
+	to {
+		-moz-transform:rotate(359deg)
+	}
+}
+@-o-keyframes rotation {
+	from {
+		-o-transform:rotate(0)
+	}
+	to {
+		-o-transform:rotate(359deg)
+	}
+}
+@keyframes rotation {
+	from {
+		transform:rotate(0)
+	}
+	to {
+		transform:rotate(359deg)
+	}
+}
+.loader-section {
+	position: fixed;
+	top: 0;
+	width: 51%;
+	height: 100%;
+	background-color: #E7EDF3;
+	z-index: 999;
+	-webkit-transform: translateX(0);  /* Chrome, Opera 15+, Safari 3.1+ */
+	-moz-transform: translateX(0);
+	-ms-transform: translateX(0);  /* IE 9 */
+	transform: translateX(0);  /* Firefox 16+, IE 10+, Opera */
+}
+.loader-section.section-left {
+	left: 0;
+}
+.loader-section.section-right {
+	right: 0;
+}
+
+/* Loaded */
+.loaded .loader-section.section-left {
+	-webkit-transform: translateX(-100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+	-moz-transform: translateX(-100%);
+	-ms-transform: translateX(-100%);  /* IE 9 */
+	transform: translateX(-100%);  /* Firefox 16+, IE 10+, Opera */
+	-webkit-transition: all 0.8s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+	transition: all 0.8s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+}
+.loaded .loader-section.section-right {
+	-webkit-transform: translateX(100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+	-ms-transform: translateX(100%);  /* IE 9 */
+	-moz-transform: translateX(100%);
+	transform: translateX(100%);  /* Firefox 16+, IE 10+, Opera */
+	-webkit-transition: all 0.8s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+	transition: all 0.8s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+}
+.font_style1 {
+	font-family: 'Fredoka One', cursive;
+}
+/**页面加载结束**/
 .data span.arrowup {
 	color: #d88918;
 }

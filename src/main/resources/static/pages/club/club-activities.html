@@ -15,12 +15,18 @@
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/adminLTE/css/AdminLTE.css">
     <link rel="stylesheet" href="../../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../../plugins/datepicker/datepicker3.css">
     <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+
     <script src="../../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../../plugins/jQueryUI/jquery-ui.min.js"></script>
     <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
 
     <script src="../../plugins/angularjs/angular.min.js"></script>
 
+    <!-- scripts js -->
+    <script src="../../js/plugins/scripts.js"></script>
     <!--分割线-->
     <!-- 分页组件开始 -->
     <script src="../../plugins/angularjs/pagination.js"></script>
@@ -42,7 +48,8 @@
 
 </head>
 
-<body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="activityController">
+<body class="hold-transition skin-purple sidebar-mini" ng-app="stuclub" ng-controller="activityController"
+      ng-init="queryLoginMess()">
 
 <!-- 内容区域 -->
 <!-- @@master = admin-layout.html-->
@@ -50,7 +57,11 @@
 
 <!-- 内容头部 -->
 <!-- 内容头部 /-->
-
+<div id="preloader">
+    <span class="spinner"></span>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>
 <!-- 正文区域 -->
 <section class="content-header">
     <h1>
@@ -65,82 +76,50 @@
             <div class="row">
                 <div class="col-md-12">
                     <ul class="timeline">
-                        <li class="time-label">
-                  <span class="bg-red">
-                    2019/4/19
-                  </span>
-                        </li>
+                        <ul class="timeline" ng-repeat="t in list">
+                            <li class="time-label"
+                                ng-if="(list[$index].activity.startTime |date:'yyyy/MM/dd') !=(list[$index-1].activity.startTime |date:'yyyy/MM/dd') ">
+                          <span class="bg-red">
+                            {{t.activity.startTime}}
+                          </span>
+                            </li>
+                            <li>
+                                <i class="fa fa-envelope bg-blue"></i>
+                                <div class="timeline-item">
+                                    <span class="time"><i class=""></i> {{t.association.assName}}---活动地点：{{t.activity.actAddress}}</span>
+
+                                    <h3 class="timeline-header">{{t.activity.actName}}</h3>
+
+                                    <div class="timeline-body">{{t.activity.actDescription}}</div>
+                                    <div class="timeline-footer">
+                                        <a class="btn btn-primary btn-xs" data-target="#editModal"
+                                           data-toggle="modal" ng-click="findOne(t.activity.actId)" >详细信息</a>
+                                        <span ng-if="t.activity.mark==0">
+                                            <span class="label label-info">审核中</span>
+
+                                        </span>
+                                        <span ng-if="t.activity.mark==1">
+                                            <span class="label label-success">审核通过</span>
+                                        </span>
+                                        <span ng-if="t.activity.mark==2">
+                                             <span class="label label-danger">已驳回</span>
+                                            <a class="btn btn-primary btn-xs" ng-click="reapply(t.activity.actId)">重新申请</a>
+                                        </span>
+                                        <span ng-if="t.activity.mark!==1">
+                                           <a class="btn btn-danger btn-xs" ng-click="dele(t.activity.actId)">删除</a>
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                         <li>
-                            <i class="fa fa-envelope bg-blue"></i>
-
-                            <div class="timeline-item">
-                                <span class="time"><i class="fa fa-clock-o"></i> 科技实践部</span>
-
-                                <h3 class="timeline-header">2019黑大篮球挑战赛</h3>
-
-                                <div class="timeline-body">
-                                    不要再纸上谈兵，不要再场外指点，相信自己，相信自己的团队。阿迪达斯街头篮球赛，用表现证明一切。
-                                    今年７月，约战广州、武汉、深圳、杭州、上海、北京、沈阳、成都八大战区的各路好手，三人一帮，篮下一战。
-                                    各城市冠军除获赠adidas提供的巨额奖品外，更能赴广州与麦迪过招，一较高低……
-                                </div>
-                                <div class="timeline-footer">
-                                    <a class="btn btn-primary btn-xs">更多</a>
-                                    <a class="btn btn-danger btn-xs">删除</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="time-label">
-                  <span class="bg-red">
-                    2019/4/19
-                  </span>
-                        </li>
-                        <li>
-                            <i class="fa fa-envelope bg-blue"></i>
-
-                            <div class="timeline-item">
-                                <span class="time"><i class="fa fa-clock-o"></i> 科技实践部</span>
-
-                                <h3 class="timeline-header">2019黑大篮球挑战赛</h3>
-
-                                <div class="timeline-body">
-                                    不要再纸上谈兵，不要再场外指点，相信自己，相信自己的团队。阿迪达斯街头篮球赛，用表现证明一切。
-                                    今年７月，约战广州、武汉、深圳、杭州、上海、北京、沈阳、成都八大战区的各路好手，三人一帮，篮下一战。
-                                    各城市冠军除获赠adidas提供的巨额奖品外，更能赴广州与麦迪过招，一较高低……
-                                </div>
-                                <div class="timeline-footer">
-                                    <a class="btn btn-primary btn-xs">更多</a>
-                                    <a class="btn btn-danger btn-xs">删除</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="time-label">
-                                <span class="bg-red">
-                                    2019/4/19
-                                </span>
-                        </li>
-                        <li>
-                            <i class="fa fa-envelope bg-blue"></i>
-
-                            <div class="timeline-item">
-                                <span class="time"><i class="fa fa-clock-o"></i> 科技实践部</span>
-
-                                <h3 class="timeline-header">2019黑大篮球挑战赛</h3>
-
-                                <div class="timeline-body">
-                                    不要再纸上谈兵，不要再场外指点，相信自己，相信自己的团队。阿迪达斯街头篮球赛，用表现证明一切。
-                                    今年７月，约战广州、武汉、深圳、杭州、上海、北京、沈阳、成都八大战区的各路好手，三人一帮，篮下一战。
-                                    各城市冠军除获赠adidas提供的巨额奖品外，更能赴广州与麦迪过招，一较高低……
-                                </div>
-                                <div class="timeline-footer">
-                                    <a class="btn btn-primary btn-xs">更多</a>
-                                    <a class="btn btn-danger btn-xs">删除</a>
-                                </div>
-                            </div>
+                            <i class="fa fa-clock-o bg-gray"></i>
                         </li>
                     </ul>
                 </div>
                 <!-- 分页 -->
-                <tm-pagination conf="paginationConf"></tm-pagination>
+                <tm-pagination conf="paginationConfByTime"></tm-pagination>
                 <!-- 分页 -->
             </div>
         </div>
@@ -150,6 +129,89 @@
 
 <!-- @@close -->
 <!-- 内容区域 /-->
+<!--编辑窗口-->
+
+<div class="modal fade" id="editModal" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    活动详细
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="row margin-bottom">
+                        <div class="col-md-2 text-center">
+                            <label class="control-label">活动名称: </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" readonly ng-model="act.activity.actName" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row margin-bottom">
+                        <div class="col-md-2 text-center">
+                            <label class="control-label">所属社团: </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" readonly ng-model="act.association.assName" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row margin-bottom">
+                        <div class="col-md-2 text-center">
+                            <label class="control-label">负责人: </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" readonly ng-model="act.activity.stuName" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row margin-bottom">
+                        <div class="col-md-2 text-center">
+                            <label class="control-label">开始时间: </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" readonly ng-model="act.activity.startTime" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row margin-bottom">
+                        <div class="col-md-2 text-center">
+                            <label class="control-label">活动地点: </label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" readonly ng-model="act.activity.actAddress" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="row margin-bottom">
+                        <div class="col-md-2 text-center">
+                            <label class="control-label">物资状态: </label>
+                        </div>
+                        <div class="col-md-8" ng-if="act.activity.assetSign==1">
+                            借用
+                        </div>
+                        <div class="col-md-8" ng-if="act.activity.assetSign==0">
+                            未借用
+                        </div>
+                    </div>
+                    <div class="row margin-bottom">
+                        <div class="col-md-2 text-center">
+                            <Label class="control-label">活动内容:</Label>
+                        </div>
+                        <div class="col-md-8">
+                            <textarea cols="80" rows="3" ng-model="act.activity.actDescription" readonly class="form-control"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </body>

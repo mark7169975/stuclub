@@ -39,7 +39,7 @@
         function SetIFrameHeight() {
             var iframeid = document.getElementById("iframe"); //iframe id
             if (document.getElementById) {
-                iframeid.height = document.documentElement.clientHeight-115;
+                iframeid.height = document.documentElement.clientHeight - 115;
             }
         }
     </script>
@@ -154,7 +154,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li id="admin-datalist">
-                            <a href="personnel/member-list.html" target="iframe" >
+                            <a href="personnel/member-list.html" target="iframe">
                                 <i class="fa fa-circle-o"></i> 成员列表
                             </a>
                         </li>
@@ -203,42 +203,7 @@
                     </ul>
                 </li>
 
-
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-edit"></i> <span>邮件管理</span>
-                        <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                    </a>
-                    <ul class="treeview-menu">
-
-                        <li id="form-general">
-                            <a href="mail/mail-compose.html" target="iframe">
-                                <i class="fa fa-circle-o"></i> 发送邮件
-                            </a>
-                        </li>
-
-                        <li id="form-advanced">
-                            <a href="mail/mail-inbox.html" target="iframe">
-                                <i class="fa fa-circle-o"></i> 收件箱
-                            </a>
-                        </li>
-
-                        <li id="form-editors">
-                            <a href="mail/mail-sent.html" target="iframe">
-                                <i class="fa fa-circle-o"></i> 发件箱
-                            </a>
-                        </li>
-                        <li id="form-editors1">
-                            <a href="mail/mail-trash.html" target="iframe">
-                                <i class="fa fa-circle-o"></i> 回收站
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-
+                <li id="admin-form-general"><a href="mail/mailbox.html" target="iframe"><i class="fa fa-edit"></i> <span>邮件管理</span></a></li>
 
                 <li class="treeview">
                     <a href="#">
@@ -264,7 +229,7 @@
                     </ul>
                 </li>
 
-                <li class="treeview">
+                <li class="treeview" ng-if="loginMess.loginRole==='ROLE_SUPERADMIN'">
                     <a href="#">
                         <i class="fa fa-table"></i> <span>资产管理</span>
                         <span class="pull-right-container">
@@ -278,10 +243,9 @@
                                 <i class="fa fa-circle-o"></i> 资产列表
                             </a>
                         </li>
-
-                        <li id="tables-data">
-                            <a href="asset/asset-apply.html" target="iframe">
-                                <i class="fa fa-circle-o"></i> 申请资产
+                        <li id="tables-return">
+                            <a href="asset/asset-return.html" target="iframe">
+                                <i class="fa fa-circle-o"></i> 归还资产
                             </a>
                         </li>
 
@@ -289,10 +253,11 @@
                 </li>
 
                 <!-- 菜单 /-->
-
-                <li id="admin-documentation"><a href="approval/approval-center.html" target="iframe"><i
-                        class="fa fa-book"></i>
-                    <span>审批中心</span></a></li>
+                <li id="admin-documentation"><a href="approval/approval-center.html" target="iframe"
+                                                ng-if="loginMess.loginRole==='ROLE_SUPERADMIN'">
+                    <i class="fa fa-book"></i>
+                    <span>审批中心</span></a>
+                </li>
 
             </ul>
         </section>
@@ -314,7 +279,7 @@
         <div class="pull-right hidden-xs">
             <b>Version</b> 1.0.0
         </div>
-        <strong>Copyright &copy; 2019-2020 <a href="http://www.itcast.cn">长春工业大学</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2019-2020 长春工业大学.</strong> All rights reserved.
     </footer>
     <!-- 底部导航 /-->
 
